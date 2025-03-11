@@ -16,3 +16,15 @@ ZapFlow is a powerful workflow automation tool designed to streamline repetitive
 1. **Clone the repository**  
    ```bash
    git clone https://github.com/khabzcodes/zapflow.git
+
+2. **Navigate to project directory**
+   ```bash
+   cd zapflow
+
+3. **Install dependencies**
+  ```bash
+  npm install
+
+4. **Run the app**
+  ```bash
+  npm run dev
