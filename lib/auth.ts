@@ -8,13 +8,11 @@ import { nanoid } from 'nanoid';
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: 'pg',
+    schema: schemas,
   }),
   plugins: [
     organization({
       allowUserToCreateOrganization: true,
-      async sendInvitationEmail(invitation) {
-        console.log('Sending invitation email to', invitation);
-      },
     }),
   ],
   databaseHooks: {
@@ -25,8 +23,9 @@ export const auth = betterAuth({
             .insert(schemas.organization)
             .values({
               id: user.id,
-              name: `${user.name}'s organization`,
-              slug: user.id,
+              name: user?.name
+                ? `${user.name}'s Organization`
+                : `${user.email.split('@')[0]}'s Organization`,
               logo: null,
               createdAt: new Date(),
             })
@@ -44,7 +43,14 @@ export const auth = betterAuth({
       },
     },
   },
+  socialProviders: {
+    github: {
+      enabled: true,
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    },
+  },
   emailAndPassword: {
-    enabled: true,
+    enabled: false,
   },
 });
