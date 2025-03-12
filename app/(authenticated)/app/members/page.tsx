@@ -1,7 +1,10 @@
 'use client';
+import { columns } from '@/components/members/table/columns';
+import { DataTable } from '@/components/ui/data-table';
 import { QUERY_KEYS } from '@/rpc/keys';
 import { getOrganizationMembers } from '@/rpc/members';
 import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 
 const MembersPage = () => {
   const { data, isPending, error } = useQuery({
@@ -13,11 +16,32 @@ const MembersPage = () => {
     return;
   }
 
+  const formattedData =
+    data?.map((member) => ({
+      ...member,
+      createdAt: new Date(member.createdAt),
+      user: {
+        ...member.user,
+        createdAt: new Date(member.user.createdAt),
+        updatedAt: new Date(member.user.updatedAt),
+      },
+      organization: {
+        ...member.organization,
+        createdAt: new Date(member.organization.createdAt),
+      },
+    })) || [];
+
   return (
     <div>
-      {data?.map((member) => (
-        <div key={member.id}>{member.user.name}</div>
-      ))}
+      {isPending ? (
+        <div>Loading...</div>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={formattedData}
+          searchQuery=""
+        />
+      )}
     </div>
   );
 };
