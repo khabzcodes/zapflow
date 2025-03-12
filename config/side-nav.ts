@@ -17,3 +17,16 @@ export const sidebarMainMenu: SideNavItem[] = [
     icon: 'plugSocket',
   },
 ];
+
+export const sidebarOrganizationMenu: SideNavItem[] = [
+  {
+    title: 'Members',
+    url: '/app/members',
+    icon: 'users',
+  },
+  {
+    title: 'Invitations',
+    url: '/app/invitations',
+    icon: 'addTeam',
+  },
+];

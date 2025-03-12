@@ -1,7 +1,13 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { user, session, organization, member } from './schemas/auth-schema';
+import {
+  user,
+  session,
+  organization,
+  member,
+  memberRelations,
+} from './schemas/auth-schema';
 
 const connectionString = process.env.DATABASE_URL!;
 
@@ -12,5 +18,7 @@ export const db = drizzle(client, {
     session,
     organization,
     member,
+    // Relations
+    memberRelations,
   },
 });

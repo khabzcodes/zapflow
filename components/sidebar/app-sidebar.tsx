@@ -10,13 +10,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { sidebarMainMenu } from '@/config/side-nav';
+import { sidebarMainMenu, sidebarOrganizationMenu } from '@/config/side-nav';
 import { Icons } from '../ui/icons';
 import React from 'react';
 import { OrganizationSwitcher } from './organization-switcher';
 import { useActiveOrganization, useListOrganizations } from '@/lib/auth-client';
 import { Skeleton } from '../ui/skeleton';
 import { UserNav } from './user-nav';
+import Link from 'next/link';
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   user: {
@@ -62,8 +63,32 @@ export const AppSidebar = ({ user, ...props }: AppSidebarProps) => {
               return (
                 <SidebarMenuItem key={idx}>
                   <SidebarMenuButton>
-                    <Icon size={16} />
-                    {item.title}
+                    <Link
+                      href={item.url}
+                      className="flex items-center gap-2">
+                      <Icon size={16} />
+                      {item.title}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+          <SidebarGroupLabel>Organization</SidebarGroupLabel>
+          <SidebarMenu>
+            {sidebarOrganizationMenu.map((item) => {
+              const Icon = Icons[item.icon];
+              return (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton>
+                    <Link
+                      href={item.url}
+                      className="flex items-center gap-2">
+                      <Icon size={16} />
+                      <span>{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );

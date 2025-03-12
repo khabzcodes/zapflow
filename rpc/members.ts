@@ -1,13 +1,14 @@
 import { baseApiRoute } from './config';
 
-const route = baseApiRoute.session;
+const route = baseApiRoute.members;
 
-export async function getSession() {
+export const getOrganizationMembers = async () => {
   const response = await route.$get();
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error);
   }
 
-  return await response.json();
-}
+  const { members } = await response.json();
+  return members;
+};
