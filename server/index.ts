@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { Hono } from 'hono';
 import { memberRoutes } from './routes/members';
+import { connectionRoutes } from './routes/connections';
 
 const app = new Hono<{
   Variables: {
@@ -32,7 +33,9 @@ app.use('*', async (c, next) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const routes = app.route('/members', memberRoutes);
+const routes = app
+  .route('/members', memberRoutes)
+  .route('/connections', connectionRoutes);
 
 export default app;
 export type AppTypes = typeof routes;

@@ -10,3 +10,13 @@ export const getMembersByOrganizationId = async (organizationId: string) => {
     },
   });
 };
+
+export const getMemberByOrganizationAndUserId = async (
+  organizationId: string,
+  userId: string,
+) => {
+  return await db.query.member.findFirst({
+    where: (member) =>
+      eq(member.organizationId, organizationId) && eq(member.userId, userId),
+  });
+};

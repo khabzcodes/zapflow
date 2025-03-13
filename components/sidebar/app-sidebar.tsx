@@ -18,6 +18,7 @@ import { useActiveOrganization, useListOrganizations } from '@/lib/auth-client';
 import { Skeleton } from '../ui/skeleton';
 import { UserNav } from './user-nav';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   user: {
@@ -33,6 +34,8 @@ export const AppSidebar = ({ user, ...props }: AppSidebarProps) => {
     useActiveOrganization();
   const { data: organizations, isPending: loadingOrganizations } =
     useListOrganizations();
+
+  const pathName = usePathname();
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -61,7 +64,13 @@ export const AppSidebar = ({ user, ...props }: AppSidebarProps) => {
             {sidebarMainMenu.map((item, idx) => {
               const Icon = Icons[item.icon];
               return (
-                <SidebarMenuItem key={idx}>
+                <SidebarMenuItem
+                  key={idx}
+                  className={
+                    pathName.includes(item.title.toLowerCase())
+                      ? 'bg-green-100 text-black'
+                      : ''
+                  }>
                   <SidebarMenuButton>
                     <Link
                       href={item.url}
@@ -81,7 +90,13 @@ export const AppSidebar = ({ user, ...props }: AppSidebarProps) => {
             {sidebarOrganizationMenu.map((item) => {
               const Icon = Icons[item.icon];
               return (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem
+                  key={item.title}
+                  className={
+                    pathName.includes(item.title.toLowerCase())
+                      ? 'bg-green-100 text-black'
+                      : ''
+                  }>
                   <SidebarMenuButton>
                     <Link
                       href={item.url}

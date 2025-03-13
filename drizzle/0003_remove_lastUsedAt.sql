@@ -1,0 +1,1 @@
+ALTER TABLE "integrations" DROP COLUMN "last_used_at";

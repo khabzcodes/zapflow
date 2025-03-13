@@ -8,6 +8,27 @@
       "when": 1741737441543,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1741899561134,
+      "tag": "0001_integrations",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741900522855,
+      "tag": "0002_modify_integrations",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1741900903798,
+      "tag": "0003_remove_lastUsedAt",
+      "breakpoints": true
     }
   ]
 }
