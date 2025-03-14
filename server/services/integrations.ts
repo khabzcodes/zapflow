@@ -1,5 +1,6 @@
 import { db } from '@/db';
 import { integration } from '@/db/schemas/integration';
+import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 
 export const createIntegration = async (
@@ -22,4 +23,12 @@ export const createIntegration = async (
     .returning();
 
   return results[0];
+};
+
+export const getIntegrationsByOrganizationId = async (
+  organizationId: string,
+) => {
+  return await db.query.integration.findMany({
+    where: (integration) => eq(integration.organizationId, organizationId),
+  });
 };

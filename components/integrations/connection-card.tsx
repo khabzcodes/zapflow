@@ -41,8 +41,8 @@ export const ConnectionCard = ({
               </>
             ) : (
               <>
-                <span className="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>
-                Not Installed
+                <span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+                Installed
               </>
             )}
           </p>
