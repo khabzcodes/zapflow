@@ -3,6 +3,8 @@ import { Hono } from 'hono';
 import { google } from 'googleapis';
 import { createIntegration } from '../services/integrations';
 import { getMemberByOrganizationAndUserId } from '../services/members';
+import { oauthClient } from '@/lib/google-oauth-client';
+import { GOOGLE_CALENDAR_SCOPES } from '@/config/scopes';
 
 export const connectionRoutes = new Hono<{
   Variables: {
@@ -80,6 +82,73 @@ export const connectionRoutes = new Hono<{
       return c.redirect(`${process.env.BETTER_APP_URL}/app/integrations`);
     } catch (error) {
       // TODO: logger
+      console.log(error);
+      return c.json({ error: 'Internal Server Error' }, 500);
+    }
+  })
+  .get('/connect/google-calendar', async (c) => {
+    try {
+      const session = c.get('session');
+      if (!session || !session.activeOrganizationId) {
+        return c.json({ error: 'Unauthorized' }, 401);
+      }
+
+      const authUrl = oauthClient(
+        'api/server/connections/callback/google-calendar',
+      ).generateAuthUrl({
+        scope: GOOGLE_CALENDAR_SCOPES,
+        access_type: 'offline',
+        prompt: 'consent',
+      });
+
+      return c.redirect(authUrl);
+    } catch (error) {
+      console.log(error);
+      return c.json({ error: 'Internal Server Error' }, 500);
+    }
+  })
+  .get('/callback/google-calendar', async (c) => {
+    try {
+      const session = c.get('session');
+      if (!session || !session.activeOrganizationId || !session.userId) {
+        return c.json({ message: 'Unauthorized' }, 401);
+      }
+
+      const code = c.req.query('code');
+      if (!code) {
+        return c.json({ error: 'Invalid code' }, 400);
+      }
+
+      const googleClient = oauthClient(
+        'api/server/connections/callback/google-calendar',
+      );
+      const { tokens } = await googleClient.getToken(code);
+
+      const organizationId = session.activeOrganizationId;
+      const userId = session.userId;
+      const appName = 'google-calendar';
+      const credentials = JSON.stringify(tokens);
+
+      const member = await getMemberByOrganizationAndUserId(
+        organizationId,
+        userId,
+      );
+      if (!member) {
+        return c.json({ error: 'Member not found' }, 404);
+      }
+
+      const integration = await createIntegration(
+        organizationId,
+        member.id,
+        appName,
+        credentials,
+      );
+      if (!integration) {
+        return c.json({ error: 'Failed to create integration' }, 500);
+      }
+
+      return c.redirect(`/app/integrations/${appName}`);
+    } catch (error) {
       console.log(error);
       return c.json({ error: 'Internal Server Error' }, 500);
     }

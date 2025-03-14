@@ -14,7 +14,7 @@ export const ConnectionCard = ({
   connected,
 }: ConnectionCardProps) => {
   const handleOnClick = () => {
-    redirect(`/apps/integrations/${connection.name}`);
+    redirect(`/app/integrations/${connection.name}`);
   };
 
   return (
