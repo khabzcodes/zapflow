@@ -1,7 +1,8 @@
 'use client';
 import { Connection } from '@/types/connection';
 import Image from 'next/image';
-import { Icons } from '../ui/icons';
+import { Badge } from '../ui/badge';
+import { redirect } from 'next/navigation';
 
 type ConnectionCardProps = {
   connection: Connection;
@@ -12,34 +13,51 @@ export const ConnectionCard = ({
   connection,
   connected,
 }: ConnectionCardProps) => {
-  const handleConnect = () => {
-    window.location.href = `/api/server/connections/connect/${connection.name}`;
+  const handleOnClick = () => {
+    redirect(`/apps/integrations/${connection.name}`);
   };
 
   return (
-    <div className="border rounded-md p-4 flex flex-col">
-      <div className="flex justify-between items-start mb-4">
-        <div className="w-10 h-10 flex items-center justify-center">
+    <div
+      className="border p-4 flex flex-col md:flex-row justify-between items-start md:items-center hover:border-white transition-colors duration-200 cursor-pointer"
+      onClick={handleOnClick}>
+      <div className="flex items-center gap-4 mb-4 md:mb-0">
+        <div className="w-12 h-12 relative">
           <Image
-            src={connection.icon}
-            alt={connection.displayName}
-            width={40}
-            height={40}
+            src={connection.icon || '/placeholder.svg'}
+            alt={connection.name}
+            width={48}
+            height={48}
+            className="object-contain"
           />
         </div>
-        {connected ? (
-          <span className="text-xs bg-green-50 text-green-600 px-2 py-1 rounded-md">
-            Connected
-          </span>
-        ) : (
-          <Icons.plusSquare
-            onClick={handleConnect}
-            className="cursor-pointer hover:text-green-800"
-          />
-        )}
+        <div>
+          <h3 className="font-medium text-base">{connection.displayName}</h3>
+          <p className="text-xs text-muted-foreground flex items-center gap-1">
+            {!connected ? (
+              <>
+                <span className="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>
+                Not Installed
+              </>
+            ) : (
+              <>
+                <span className="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>
+                Not Installed
+              </>
+            )}
+          </p>
+        </div>
       </div>
-      <h3 className="font-medium mb-1">{connection.displayName}</h3>
-      <p className="text-sm text-gray-500 mb-4">{connection.description}</p>
+      <div className="flex flex-wrap gap-2">
+        {connection.categories.map((category) => (
+          <Badge
+            key={`${connection.name}-${category}`}
+            variant="secondary"
+            className="rounded-md font-normal">
+            {category}
+          </Badge>
+        ))}
+      </div>
     </div>
   );
 };

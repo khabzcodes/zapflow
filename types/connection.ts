@@ -4,4 +4,5 @@ export interface Connection {
   name: string;
   description: string;
   link: string;
+  categories: string[];
 }
