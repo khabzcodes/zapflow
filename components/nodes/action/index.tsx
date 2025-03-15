@@ -26,7 +26,6 @@ export const ActionNode = ({ data, isConnectable }: NodeProps<ActionNode>) => {
       <Handle
         type="target"
         position={Position.Left}
-        id="b"
         isConnectable={isConnectable}
         className="w-3 h-3 bg-muted-foreground border-2 border-background"
       />

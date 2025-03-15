@@ -1,21 +1,20 @@
-import { Button } from '@/components/ui/button';
 import { Panel } from '@xyflow/react';
+import { NodeLibrary } from '../node-library';
+import { applicationsConfig } from '@/config/applications';
+import { Module } from '@/types/module';
 
-export const ControlPanel = () => {
+type ControlPanelProps = {
+  onAddModule: (module: Module) => void;
+};
+
+export const ControlPanel = ({ onAddModule }: ControlPanelProps) => {
   return (
     <Panel position="top-right">
       <div className="flex gap-2">
-        <Button
-          size="sm"
-          className="flex items-center gap-1">
-          Save
-        </Button>
-        <Button
-          size="sm"
-          variant="secondary"
-          className="flex items-center gap-1">
-          Publish
-        </Button>
+        <NodeLibrary
+          applications={applicationsConfig}
+          onClick={onAddModule}
+        />
       </div>
     </Panel>
   );

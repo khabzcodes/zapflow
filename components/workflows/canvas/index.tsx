@@ -18,6 +18,8 @@ import { CustomControls } from './controls/custom-control';
 import React from 'react';
 import { TriggerNode } from '@/components/nodes/trigger';
 import { ActionNode } from '@/components/nodes/action';
+import { Module } from '@/types/module';
+import { nanoid } from 'nanoid';
 
 export type WorkflowCanvasProps = {
   initialNodes: Node[];
@@ -49,6 +51,38 @@ export const WorkflowCanvas = ({
     [setEdges],
   );
 
+  const findFreePosition = (
+    nodes: Node[],
+    startX = 400,
+    startY = 100,
+    gridSize = 200,
+  ) => {
+    const isPositionOccupied = (x: number, y: number) => {
+      return nodes.some(
+        (node) =>
+          Math.abs(node.position.x - x) < gridSize &&
+          Math.abs(node.position.y - y) < gridSize,
+      );
+    };
+
+    let x = startX;
+    let y = startY;
+    let attempts = 0;
+    const maxAttempts = 100;
+
+    while (isPositionOccupied(x, y) && attempts < maxAttempts) {
+      if (attempts % 4 === 0) {
+        y += gridSize;
+        x = startX;
+      } else {
+        x += gridSize;
+      }
+      attempts++;
+    }
+
+    return { x, y };
+  };
+
   // Handle trigger action
   const handleTrigger = React.useCallback(
     (triggerId: string) => {
@@ -74,10 +108,31 @@ export const WorkflowCanvas = ({
     },
     [edges, setNodes],
   );
+
+  const handleAddModule = React.useCallback(
+    (module: Module) => {
+      const id = nanoid();
+      const newNode: Node = {
+        id,
+        type: module.type,
+        // Find free position
+        position: findFreePosition(nodes),
+        data: {
+          id,
+          label: module.label,
+          description: module.description,
+        },
+      };
+
+      setNodes((nds) => [...nds, newNode]);
+    },
+    [nodes],
+  );
   // Update nodes with trigger handler
   React.useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
+        console.log(node);
         if (node.type === 'trigger') {
           return {
             ...node,
@@ -104,7 +159,7 @@ export const WorkflowCanvas = ({
       fitView>
       <Background gap={16} />
       <CustomControls />
-      <ControlPanel />
+      <ControlPanel onAddModule={handleAddModule} />
     </ReactFlow>
   );
 };
