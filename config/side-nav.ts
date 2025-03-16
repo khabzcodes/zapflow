@@ -7,8 +7,8 @@ export const sidebarMainMenu: SideNavItem[] = [
     icon: 'home',
   },
   {
-    title: 'Automation',
-    url: '/app/automation',
+    title: 'Workflows',
+    url: '/app/workflows',
     icon: 'nodeMoveUp',
   },
   {

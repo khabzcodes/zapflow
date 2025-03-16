@@ -14,6 +14,10 @@ import { Icons } from '@/components/ui/icons';
 import { Input } from '@/components/ui/input';
 import { Module } from '@/types/module';
 
+type GroupedModules = {
+  [key: string]: Module[];
+};
+
 export const NodeLibrary = ({
   applications,
   onClick,
@@ -25,6 +29,17 @@ export const NodeLibrary = ({
 
   const handleAppSelect = (app: Application) => {
     setSelectedApp(app);
+  };
+
+  const groupModulesByType = (modules: Module[]): GroupedModules => {
+    return modules.reduce((acc: GroupedModules, module) => {
+      const type = module.type || 'Other';
+      if (!acc[type]) {
+        acc[type] = [];
+      }
+      acc[type].push(module);
+      return acc;
+    }, {});
   };
 
   const handleBack = () => {
@@ -67,14 +82,27 @@ export const NodeLibrary = ({
           ) : (
             <div className="space-y-2">
               <Input />
-              {selectedApp.modules.map((module) => (
-                <ModuleCard
-                  key={module.label}
-                  module={module}
-                  onSelect={onClick}
-                  appIcon={selectedApp.icon}
-                />
-              ))}
+              {Object.entries(groupModulesByType(selectedApp.modules)).map(
+                ([type, modules]) => (
+                  <div
+                    key={type}
+                    className="space-y-2">
+                    <h3 className="text-sm font-bold text-muted-foreground uppercase">
+                      {type}
+                    </h3>
+                    <div className="space-y-2">
+                      {modules.map((module) => (
+                        <ModuleCard
+                          key={module.label}
+                          module={module}
+                          onSelect={onClick}
+                          appIcon={selectedApp.icon}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ),
+              )}
             </div>
           )}
         </div>

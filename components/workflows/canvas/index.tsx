@@ -11,6 +11,7 @@ import {
   type Edge,
   type OnConnect,
   type NodeTypes,
+  ConnectionMode,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ControlPanel } from './control-panel';
@@ -47,7 +48,16 @@ export const WorkflowCanvas = ({
     [setEdges],
   );
   const onConnect: OnConnect = React.useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...connection,
+            type: 'smoothstep',
+          },
+          eds,
+        ),
+      ),
     [setEdges],
   );
 
@@ -152,9 +162,11 @@ export const WorkflowCanvas = ({
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
+      defaultEdges={initialEdges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      connectionMode={ConnectionMode.Loose}
       proOptions={{ hideAttribution: true }}
       fitView>
       <Background gap={16} />

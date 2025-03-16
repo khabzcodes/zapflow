@@ -1,0 +1,29 @@
+import { CreateWorkflowInputData } from '@/validations/workflows';
+import { baseApiRoute } from './config';
+
+const route = baseApiRoute.workflows;
+
+export const getOrganizationWorkflows = async () => {
+  const response = await route.$get();
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error);
+  }
+
+  const { workflows } = await response.json();
+
+  return workflows;
+};
+
+export const createOrganizationWorkflow = async (
+  data: CreateWorkflowInputData,
+) => {
+  const response = await route.$post({ json: data });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error);
+  }
+
+  const { workflow } = await response.json();
+  return workflow;
+};

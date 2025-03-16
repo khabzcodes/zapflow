@@ -10,6 +10,14 @@ export const connections: Connection[] = [
     categories: ['Google', 'Data Storage'],
   },
   {
+    icon: '/connections/gmail.png',
+    displayName: 'Gmail',
+    name: 'gmail',
+    description: 'Configure your Gmail to sync or create emails.',
+    link: '/api/server/connections/connect/gmail',
+    categories: ['Google', 'Email'],
+  },
+  {
     icon: '/connections/google-calendar.png',
     displayName: 'Google Calendar',
     name: 'google-calendar',

@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 import { memberRoutes } from './routes/members';
 import { connectionRoutes } from './routes/connections';
 import { integrationRoutes } from './routes/integrations';
+import { workflowRoutes } from './routes/workflows';
 
 const app = new Hono<{
   Variables: {
@@ -37,7 +38,8 @@ app.use('*', async (c, next) => {
 const routes = app
   .route('/members', memberRoutes)
   .route('/connections', connectionRoutes)
-  .route('/integrations', integrationRoutes);
+  .route('/integrations', integrationRoutes)
+  .route('/workflows', workflowRoutes);
 
 export default app;
 export type AppTypes = typeof routes;

@@ -9,6 +9,7 @@ import {
   memberRelations,
 } from './schemas/auth-schema';
 import { integration } from './schemas/integration';
+import { workflow } from './schemas/workflow';
 
 const connectionString = process.env.DATABASE_URL!;
 
@@ -20,6 +21,7 @@ export const db = drizzle(client, {
     organization,
     member,
     integration,
+    workflow,
     // Relations
     memberRelations,
   },

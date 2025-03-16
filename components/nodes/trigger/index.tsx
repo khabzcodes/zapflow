@@ -3,15 +3,12 @@ import { Card } from '@/components/ui/card';
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import { PlayCircle } from 'lucide-react';
 
-type TriggerNode = Node<
-  {
-    onTrigger(id: string): void;
-    label: string;
-    description: string;
-    id: string;
-  },
-  'number'
->;
+type TriggerNode = Node<{
+  onTrigger(id: string): void;
+  label: string;
+  description: string;
+  id: string;
+}>;
 
 export interface TriggerNodeData extends TriggerNode {
   onTrigger: (id: string) => void;
@@ -23,7 +20,6 @@ export const TriggerNode = ({
 }: NodeProps<TriggerNode>) => {
   const handleTrigger = () => {
     if (data.onTrigger) {
-      console.log('Triggering', data.id);
       data.onTrigger(data.id);
     }
   };
