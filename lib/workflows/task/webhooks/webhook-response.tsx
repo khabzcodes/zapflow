@@ -8,14 +8,14 @@ export const WebhookResponseTask = {
   description: 'Creates a response to the webhook',
   inputs: [
     {
-      name: 'status',
+      name: 'Status',
       type: TaskParamType.NUMBER,
       helperText: 'The status code of the response',
       required: true,
       hideHandle: true,
     },
     {
-      name: 'body',
+      name: 'Body',
       type: TaskParamType.STRING,
       helperText: 'The body of the response',
       required: true,

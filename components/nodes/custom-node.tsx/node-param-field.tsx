@@ -4,6 +4,7 @@ import { StringParam } from './params/string-param';
 import { useReactFlow } from '@xyflow/react';
 import { AppNode } from '@/types/app-node';
 import { useCallback } from 'react';
+import { NumberParam } from './params/number-param';
 
 export const NodeParamField = ({
   param,
@@ -32,6 +33,16 @@ export const NodeParamField = ({
     case TaskParamType.STRING:
       return (
         <StringParam
+          param={param}
+          value={value}
+          updateNodeParamValue={(newValue: string) => {
+            updateNodeParamValue(newValue);
+          }}
+        />
+      );
+    case TaskParamType.NUMBER:
+      return (
+        <NumberParam
           param={param}
           value={value}
           updateNodeParamValue={(newValue: string) => {
