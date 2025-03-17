@@ -14,7 +14,10 @@ const CustomNode = memo((props: NodeProps) => {
     <NodeCard
       nodeId={props.id}
       selected={props.selected}>
-      <NodeHeader taskType={data.type} />
+      <NodeHeader
+        nodeId={props.id}
+        taskType={data.type}
+      />
       <NodeInputs>
         {task.inputs.map((input, idx) => (
           <NodeInput

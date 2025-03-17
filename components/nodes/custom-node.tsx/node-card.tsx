@@ -9,6 +9,7 @@ type NodeCardProps = {
 
 export const NodeCard = ({ nodeId, selected, children }: NodeCardProps) => {
   const { getNode, setCenter } = useReactFlow();
+
   return (
     <div
       onDoubleClick={() => {

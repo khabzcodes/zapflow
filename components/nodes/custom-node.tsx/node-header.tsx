@@ -1,3 +1,4 @@
+import { useReactFlow } from '@xyflow/react';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/ui/icons';
 import { TaskType } from '@/enums/task-type';
@@ -5,11 +6,18 @@ import { TaskRegistry } from '@/lib/workflows/task/registry';
 import Image from 'next/image';
 
 type NodeHeaderProps = {
+  nodeId: string;
   taskType: TaskType;
 };
 
-export const NodeHeader = ({ taskType }: NodeHeaderProps) => {
+export const NodeHeader = ({ nodeId, taskType }: NodeHeaderProps) => {
+  const { deleteElements } = useReactFlow();
   const task = TaskRegistry[taskType];
+
+  const handleDelete = () => {
+    deleteElements({ nodes: [{ id: nodeId }] });
+  };
+
   return (
     <div className="flex items-center gap-2 p-2">
       <Image
@@ -22,12 +30,22 @@ export const NodeHeader = ({ taskType }: NodeHeaderProps) => {
         <p className="text-xs font-bold uppercase text-muted-foreground">
           {task.label}
         </p>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="drag-handle cursor-grab">
-          <Icons.dragAndDropVertical />
-        </Button>
+        <div className="flex items-center justify-end gap-2">
+          <Button
+            onClick={() => {
+              handleDelete();
+            }}
+            variant="ghost"
+            size="icon">
+            <Icons.delete />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="drag-handle cursor-grab">
+            <Icons.dragAndDropVertical />
+          </Button>
+        </div>
       </div>
     </div>
   );

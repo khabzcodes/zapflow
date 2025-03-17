@@ -6,6 +6,9 @@ import {
   BackgroundVariant,
   Connection,
   Edge,
+  getConnectedEdges,
+  getIncomers,
+  getOutgoers,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -88,6 +91,33 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
     [setEdges],
   );
 
+  const onNodesDelete = React.useCallback(
+    (deleted: AppNode[]) => {
+      setEdges(
+        deleted.reduce((acc, node) => {
+          const incomers = getIncomers(node, nodes, edges);
+          const outgoers = getOutgoers(node, nodes, edges);
+          const connectedEdges = getConnectedEdges([node], edges);
+
+          const remainingEdges = acc.filter(
+            (edge) => !connectedEdges.includes(edge),
+          );
+
+          const createdEdges = incomers.flatMap(({ id: source }) =>
+            outgoers.map(({ id: target }) => ({
+              id: `${source}->${target}`,
+              source,
+              target,
+            })),
+          );
+
+          return [...remainingEdges, ...createdEdges];
+        }, edges),
+      );
+    },
+    [setEdges, edges, nodes],
+  );
+
   return (
     <main className="h-full w-full">
       <ReactFlow
@@ -97,6 +127,7 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
         onNodesChange={onNodesChange}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        onNodesDelete={onNodesDelete}
         snapToGrid
         snapGrid={snapGrid}
         fitViewOptions={fitViewOptions}
