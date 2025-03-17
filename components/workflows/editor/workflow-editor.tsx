@@ -11,6 +11,7 @@ import {
 import { createFlowNode } from '@/lib/workflows/create-flow-node';
 import { TaskType } from '@/enums/task-type';
 import CustomNode from '@/components/nodes/custom-node.tsx';
+import React from 'react';
 
 type WorkflowEditorProps = {
   workflow: Workflow;
@@ -26,11 +27,31 @@ const fitViewOptions = { padding: 2 };
 export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
   console.log('workflow', workflow);
   const [nodes, setNodes, onNodesChange] = useNodesState([
-    createFlowNode(TaskType.GMAIL_TRIGGER),
+    createFlowNode(TaskType.SEND_GMAIL_EMAIL),
   ]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   console.log(setNodes);
   console.log(setEdges);
+
+  const onDragOver = React.useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop = React.useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+      const taskType = event.dataTransfer.getData('application/reactflow');
+      if (typeof taskType === undefined || !taskType) return;
+
+      const position = { x: event.clientX, y: event.clientY };
+
+      const newNode = createFlowNode(taskType as TaskType, position);
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [setNodes],
+  );
+
   return (
     <main className="h-full w-full">
       <ReactFlow
@@ -42,7 +63,9 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
         snapToGrid
         snapGrid={snapGrid}
         fitViewOptions={fitViewOptions}
-        fitView>
+        fitView
+        onDragOver={onDragOver}
+        onDrop={onDrop}>
         <Controls
           position="top-left"
           fitViewOptions={fitViewOptions}

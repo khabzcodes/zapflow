@@ -1,5 +1,6 @@
 export enum TaskParamType {
   STRING = 'STRING',
+  TEXTAREA = 'TEXTAREA',
   PASSWORD = 'PASSWORD',
   NUMBER = 'NUMBER',
   BOOLEAN = 'BOOLEAN',
