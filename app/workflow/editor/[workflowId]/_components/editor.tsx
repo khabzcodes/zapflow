@@ -13,6 +13,7 @@ export const Editor = ({ workflow }: EditorProps) => {
     <ReactFlowProvider>
       <div className="flex flex-col h-full w-full overflow-hidden">
         <TopNav
+          workflowId={workflow.id}
           title={workflow.name}
           description={workflow.description || ''}
         />

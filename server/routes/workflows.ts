@@ -1,12 +1,16 @@
 import { auth } from '@/lib/auth';
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { createWorkflowSchema } from '@/validations/workflows';
+import {
+  createWorkflowSchema,
+  updateWorkflowSchema,
+} from '@/validations/workflows';
 import { getMemberByOrganizationAndUserId } from '../services/members';
 import {
   createWorkflow,
   getWorkflowById,
   getWorkflowsByOrganizationId,
+  updateWorkflow,
 } from '../services/workflows';
 
 export const workflowRoutes = new Hono<{
@@ -87,6 +91,48 @@ export const workflowRoutes = new Hono<{
       }
 
       return c.json({ workflow }, 201);
+    } catch (error) {
+      console.log(error);
+
+      return c.json({ error: 'Internal Server Error' }, 500);
+    }
+  })
+  .put('/:id', zValidator('json', updateWorkflowSchema), async (c) => {
+    try {
+      const workflowId = c.req.param('id');
+      const body = c.req.valid('json');
+
+      const session = c.get('session');
+      if (!session || !session.activeOrganizationId || !session.userId) {
+        return c.json({ error: 'Unauthorized' }, 401);
+      }
+
+      const member = await getMemberByOrganizationAndUserId(
+        session.activeOrganizationId,
+        session.userId,
+      );
+
+      if (!member || member.organizationId !== session.activeOrganizationId) {
+        return c.json({ error: 'Unauthorized' }, 401);
+      }
+
+      const workflow = await getWorkflowById(workflowId);
+      if (!workflow) {
+        return c.json({ error: 'Workflow not found' }, 404);
+      }
+
+      const updatedWorkflow = await updateWorkflow(
+        workflowId,
+        body.nodes,
+        body.edges,
+        body.viewPort,
+        member.id,
+      );
+      if (!updatedWorkflow) {
+        return c.json({ error: 'Failed to update workflow' }, 500);
+      }
+
+      return c.json({ workflow: updatedWorkflow }, 200);
     } catch (error) {
       console.log(error);
 

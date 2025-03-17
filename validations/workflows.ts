@@ -17,4 +17,11 @@ export const createWorkflowSchema = z.object({
   }),
 });
 
+export const updateWorkflowSchema = z.object({
+  nodes: z.string(),
+  edges: z.string(),
+  viewPort: z.string(),
+});
+
 export type CreateWorkflowInputData = z.infer<typeof createWorkflowSchema>;
+export type UpdateWorkflowInputData = z.infer<typeof updateWorkflowSchema>;

@@ -31,8 +31,6 @@ export default function EditorPage({
     return toast.error(error.message);
   }
 
-  console.log(workflow);
-
   return (
     <Editor
       workflow={{

@@ -35,3 +35,25 @@ export const createWorkflow = async (
 
   return results[0];
 };
+
+export const updateWorkflow = async (
+  workflowId: string,
+  nodes: string,
+  edges: string,
+  viewPort: string,
+  memberId: string,
+) => {
+  const results = await db
+    .update(workflows)
+    .set({
+      nodes: JSON.parse(nodes),
+      edges: JSON.parse(edges),
+      viewPort: JSON.parse(viewPort),
+      updatedById: memberId,
+      updatedAt: new Date(),
+    })
+    .where(eq(workflows.id, workflowId))
+    .returning();
+
+  return results[0];
+};

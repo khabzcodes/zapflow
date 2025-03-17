@@ -6,6 +6,8 @@ import {
   ReactFlow,
   useEdgesState,
   useNodesState,
+  useReactFlow,
+  type Node,
 } from '@xyflow/react';
 import { createFlowNode } from '@/lib/workflows/create-flow-node';
 import { TaskType } from '@/enums/task-type';
@@ -26,12 +28,31 @@ const fitViewOptions = { padding: 2 };
 
 export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
   console.log('workflow', workflow);
-  const [nodes, setNodes, onNodesChange] = useNodesState([
-    createFlowNode(TaskType.SEND_GMAIL_EMAIL),
-  ]);
+  const [nodes, setNodes, onNodesChange] = useNodesState(
+    workflow.nodes as Node[],
+  );
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  console.log(setNodes);
-  console.log(setEdges);
+  const { setViewport } = useReactFlow();
+
+  React.useEffect(() => {
+    try {
+      const nodes = JSON.parse(workflow.nodes as string);
+      const edges = JSON.parse(workflow.edges as string);
+      const viewPort = JSON.parse(workflow.viewPort as string);
+      if (nodes) setNodes(nodes);
+      if (edges) setEdges(edges);
+      if (viewPort) setViewport(viewPort);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [
+    setEdges,
+    setNodes,
+    setViewport,
+    workflow.edges,
+    workflow.nodes,
+    workflow.viewPort,
+  ]);
 
   const onDragOver = React.useCallback((event: React.DragEvent) => {
     event.preventDefault();
