@@ -3,7 +3,6 @@ import '@xyflow/react/dist/style.css';
 import {
   Background,
   BackgroundVariant,
-  Controls,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -12,6 +11,7 @@ import { createFlowNode } from '@/lib/workflows/create-flow-node';
 import { TaskType } from '@/enums/task-type';
 import CustomNode from '@/components/nodes/custom-node.tsx';
 import React from 'react';
+import { CustomControls } from './controls/custom-controls';
 
 type WorkflowEditorProps = {
   workflow: Workflow;
@@ -65,11 +65,9 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
         fitViewOptions={fitViewOptions}
         fitView
         onDragOver={onDragOver}
-        onDrop={onDrop}>
-        <Controls
-          position="top-left"
-          fitViewOptions={fitViewOptions}
-        />
+        onDrop={onDrop}
+        proOptions={{ hideAttribution: true }}>
+        <CustomControls />
         <Background variant={BackgroundVariant.Dots} />
       </ReactFlow>
     </main>

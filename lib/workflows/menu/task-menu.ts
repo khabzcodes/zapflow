@@ -1,6 +1,6 @@
 import { SendGmailEmailTask } from '../task/gmail';
 import { GmailTriggerTask } from '../task/gmail-trigger';
-import { CustomWebhookTask } from '../task/webhooks';
+import { CustomWebhookTask, WebhookResponseTask } from '../task/webhooks';
 
 export const taskMenuList = [
   {
@@ -11,6 +11,6 @@ export const taskMenuList = [
   {
     title: 'Webhooks',
     icon: '/connections/webhook.png',
-    tasks: [CustomWebhookTask],
+    tasks: [CustomWebhookTask, WebhookResponseTask],
   },
 ];
