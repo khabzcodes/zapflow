@@ -33,7 +33,15 @@ const WorkflowsPage = () => {
         setIsOpen={setOpenCreateWorkflow}
       />
       {data.length ? (
-        <div>We have Something</div>
+        <div className="flex flex-col gap-2">
+          {data.map((workflow) => (
+            <a
+              key={workflow.id}
+              href={`/workflow/editor/${workflow.id}`}>
+              {workflow.name}
+            </a>
+          ))}
+        </div>
       ) : (
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="nodeMoveUp" />

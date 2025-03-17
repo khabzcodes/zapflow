@@ -27,3 +27,14 @@ export const createOrganizationWorkflow = async (
   const { workflow } = await response.json();
   return workflow;
 };
+
+export const getOrganizationWorkFlow = async (workflowId: string) => {
+  const response = await route[':id'].$get({ param: { id: workflowId } });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error);
+  }
+
+  const { workflow } = await response.json();
+  return workflow;
+};

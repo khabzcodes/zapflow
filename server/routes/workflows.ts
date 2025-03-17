@@ -5,6 +5,7 @@ import { createWorkflowSchema } from '@/validations/workflows';
 import { getMemberByOrganizationAndUserId } from '../services/members';
 import {
   createWorkflow,
+  getWorkflowById,
   getWorkflowsByOrganizationId,
 } from '../services/workflows';
 
@@ -25,6 +26,34 @@ export const workflowRoutes = new Hono<{
       );
 
       return c.json({ workflows }, 200);
+    } catch (error) {
+      console.log(error);
+
+      return c.json({ error: 'Internal Server Error' }, 500);
+    }
+  })
+  .get('/:id', async (c) => {
+    try {
+      const workflowId = c.req.param('id');
+      const session = c.get('session');
+      if (!session || !session.activeOrganizationId || !session.userId) {
+        return c.json({ error: 'Unauthorized' }, 401);
+      }
+
+      const member = await getMemberByOrganizationAndUserId(
+        session.activeOrganizationId,
+        session.userId,
+      );
+      if (!member || member.organizationId !== session.activeOrganizationId) {
+        return c.json({ error: 'Unauthorized' }, 401);
+      }
+
+      const workflow = await getWorkflowById(workflowId);
+      if (!workflow) {
+        return c.json({ error: 'Workflow not found' }, 404);
+      }
+
+      return c.json({ workflow }, 200);
     } catch (error) {
       console.log(error);
 

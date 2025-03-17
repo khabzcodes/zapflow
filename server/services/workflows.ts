@@ -10,6 +10,12 @@ export const getWorkflowsByOrganizationId = async (organizationId: string) => {
   });
 };
 
+export const getWorkflowById = async (workflowId: string) => {
+  return await db.query.workflow.findFirst({
+    where: (workflow) => eq(workflow.id, workflowId),
+  });
+};
+
 export const createWorkflow = async (
   organizationId: string,
   memberId: string,
