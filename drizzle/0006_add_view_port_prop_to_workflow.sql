@@ -1,0 +1,1 @@
+ALTER TABLE "workflows" ADD COLUMN "view_port" jsonb DEFAULT '{}'::jsonb NOT NULL;

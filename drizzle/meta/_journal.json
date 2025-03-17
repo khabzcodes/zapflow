@@ -43,6 +43,13 @@
       "when": 1742122411866,
       "tag": "0005_update_workflow_table",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1742235628061,
+      "tag": "0006_add_view_port_prop_to_workflow",
+      "breakpoints": true
     }
   ]
 }
