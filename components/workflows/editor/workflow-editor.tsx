@@ -1,19 +1,23 @@
 import { Workflow } from '@/types/workflow';
 import '@xyflow/react/dist/style.css';
 import {
+  addEdge,
   Background,
   BackgroundVariant,
+  Connection,
+  Edge,
   ReactFlow,
   useEdgesState,
   useNodesState,
   useReactFlow,
-  type Node,
 } from '@xyflow/react';
 import { createFlowNode } from '@/lib/workflows/create-flow-node';
 import { TaskType } from '@/enums/task-type';
 import CustomNode from '@/components/nodes/custom-node.tsx';
 import React from 'react';
 import { CustomControls } from './controls/custom-controls';
+import { DeletableEdge } from '@/components/edges/deletable-edge';
+import { AppNode } from '@/types/app-node';
 
 type WorkflowEditorProps = {
   workflow: Workflow;
@@ -23,22 +27,26 @@ const nodeTypes = {
   ZapflowNode: CustomNode,
 };
 
+const edgeTypes = {
+  default: DeletableEdge,
+};
+
 const snapGrid: [number, number] = [16, 16];
 const fitViewOptions = { padding: 2 };
 
 export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
-  console.log('workflow', workflow);
-  const [nodes, setNodes, onNodesChange] = useNodesState(
-    workflow.nodes as Node[],
-  );
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const { setViewport } = useReactFlow();
 
   React.useEffect(() => {
     try {
-      const nodes = JSON.parse(workflow.nodes as string);
-      const edges = JSON.parse(workflow.edges as string);
-      const viewPort = JSON.parse(workflow.viewPort as string);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const nodes = workflow.nodes as any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const edges = workflow.edges as any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const viewPort = workflow.viewPort as any;
       if (nodes) setNodes(nodes);
       if (edges) setEdges(edges);
       if (viewPort) setViewport(viewPort);
@@ -73,6 +81,13 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
     [setNodes],
   );
 
+  const onConnect = React.useCallback(
+    (connection: Connection) => {
+      setEdges((eds) => addEdge({ ...connection, animated: true }, eds));
+    },
+    [setEdges],
+  );
+
   return (
     <main className="h-full w-full">
       <ReactFlow
@@ -81,12 +96,14 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
         onEdgesChange={onEdgesChange}
         onNodesChange={onNodesChange}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         snapToGrid
         snapGrid={snapGrid}
         fitViewOptions={fitViewOptions}
         fitView
         onDragOver={onDragOver}
         onDrop={onDrop}
+        onConnect={onConnect}
         proOptions={{ hideAttribution: true }}>
         <CustomControls />
         <Background variant={BackgroundVariant.Dots} />

@@ -15,4 +15,10 @@ export const CustomWebhookTask = {
       hideHandle: true,
     },
   ],
+  outputs: [
+    {
+      name: 'Response',
+      type: TaskParamType.STRING,
+    },
+  ],
 };

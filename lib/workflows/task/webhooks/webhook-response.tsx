@@ -22,4 +22,5 @@ export const WebhookResponseTask = {
       hideHandle: true,
     },
   ],
+  outputs: [],
 };

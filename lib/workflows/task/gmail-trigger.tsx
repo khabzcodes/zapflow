@@ -15,12 +15,6 @@ export const GmailTriggerTask = {
       required: true,
       hideHandle: true,
     },
-    // {
-    //   name: 'Folder',
-    //   type: TaskParamType.STRING,
-    //   helperText: 'Select a folder',
-    //   required: true,
-    //   hideHandle: true,
-    // },
   ],
+  outputs: [],
 };
