@@ -30,5 +30,10 @@ export const SendGmailEmailTask = {
       variant: 'textarea',
     },
   ],
-  outputs: [],
+  outputs: [
+    {
+      name: 'Response',
+      type: TaskParamType.STRING,
+    },
+  ],
 };
