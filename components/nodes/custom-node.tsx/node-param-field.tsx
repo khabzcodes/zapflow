@@ -9,9 +9,11 @@ import { NumberParam } from './params/number-param';
 export const NodeParamField = ({
   param,
   nodeId,
+  disabled,
 }: {
   param: TaskParam;
   nodeId: string;
+  disabled: boolean;
 }) => {
   const { updateNodeData, getNode } = useReactFlow();
   const node = getNode(nodeId) as AppNode;
@@ -38,6 +40,7 @@ export const NodeParamField = ({
           updateNodeParamValue={(newValue: string) => {
             updateNodeParamValue(newValue);
           }}
+          disabled={disabled}
         />
       );
     case TaskParamType.NUMBER:
@@ -48,6 +51,7 @@ export const NodeParamField = ({
           updateNodeParamValue={(newValue: string) => {
             updateNodeParamValue(newValue);
           }}
+          disabled={disabled}
         />
       );
     default:

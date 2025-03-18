@@ -7,10 +7,16 @@ import { useId } from 'react';
 export const NumberParam = ({
   param,
   value,
+  disabled,
   updateNodeParamValue,
 }: ParamProps) => {
   const [internalValue, setInternalValue] = React.useState(value || '');
   const id = useId();
+
+  React.useEffect(() => {
+    setInternalValue(value || '');
+  }, [value]);
+
   return (
     <div className="space-y-1 p-1 w-full">
       <Label
@@ -20,6 +26,7 @@ export const NumberParam = ({
         {param.required && <span className="text-red-500">*</span>}
       </Label>
       <Input
+        disabled={disabled}
         type="number"
         id={id}
         className="text-xs border-1 border-muted-foreground"

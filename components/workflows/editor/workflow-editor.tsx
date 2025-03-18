@@ -26,11 +26,6 @@ type WorkflowEditorProps = {
   workflow: Workflow;
 };
 
-// const nodeTypes = {
-//   ZapflowNode: CustomNode,
-//   GmailTriggerNode: GmailTriggerNode,
-// };
-
 const edgeTypes = {
   default: DeletableEdge,
 };
@@ -41,7 +36,7 @@ const fitViewOptions = { padding: 2 };
 export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const { setViewport } = useReactFlow();
+  const { setViewport, updateNodeData } = useReactFlow();
 
   React.useEffect(() => {
     try {
@@ -88,8 +83,16 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
   const onConnect = React.useCallback(
     (connection: Connection) => {
       setEdges((eds) => addEdge({ ...connection, animated: true }, eds));
+      if (!connection.targetHandle) return;
+
+      const node = nodes.find((nd) => nd.id === connection.target);
+      if (!node) return;
+
+      const nodeInputs = node.data.inputs;
+      delete nodeInputs[connection.targetHandle];
+      updateNodeData(node.id, { inputs: nodeInputs });
     },
-    [setEdges],
+    [nodes, setEdges, updateNodeData],
   );
 
   const onNodesDelete = React.useCallback(

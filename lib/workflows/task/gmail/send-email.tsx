@@ -27,6 +27,7 @@ export const SendGmailEmailTask = {
       helperText: 'Body of the email',
       required: true,
       hideHandle: false,
+      variant: 'textarea',
     },
   ],
   outputs: [],

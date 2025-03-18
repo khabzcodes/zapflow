@@ -1,10 +1,10 @@
 'use client';
-import { Geist_Mono } from 'next/font/google';
+import { Space_Grotesk } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { QueryClientProviderWrapper } from '@/lib/query-client';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
-const geistMono = Geist_Mono({ subsets: ['latin'] });
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
 
 export const GlobalLayout = ({
   children,
@@ -14,7 +14,7 @@ export const GlobalLayout = ({
       lang="en"
       suppressHydrationWarning>
       <body
-        className={`${geistMono.className} antialiased`}
+        className={`${spaceGrotesk.className} antialiased`}
         suppressHydrationWarning>
         <QueryClientProviderWrapper>
           <TooltipProvider>{children}</TooltipProvider>
