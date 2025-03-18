@@ -16,19 +16,20 @@ import {
 } from '@xyflow/react';
 import { createFlowNode } from '@/lib/workflows/create-flow-node';
 import { TaskType } from '@/enums/task-type';
-import CustomNode from '@/components/nodes/custom-node.tsx';
 import React from 'react';
 import { CustomControls } from './controls/custom-controls';
 import { DeletableEdge } from '@/components/edges/deletable-edge';
 import { AppNode } from '@/types/app-node';
+import { nodeTypes } from '@/config/node-type-mapper';
 
 type WorkflowEditorProps = {
   workflow: Workflow;
 };
 
-const nodeTypes = {
-  ZapflowNode: CustomNode,
-};
+// const nodeTypes = {
+//   ZapflowNode: CustomNode,
+//   GmailTriggerNode: GmailTriggerNode,
+// };
 
 const edgeTypes = {
   default: DeletableEdge,

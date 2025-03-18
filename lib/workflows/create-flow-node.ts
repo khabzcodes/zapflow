@@ -1,3 +1,4 @@
+import { nodeTypeMap } from '@/config/node-type-mapper';
 import { TaskType } from '@/enums/task-type';
 import { AppNode } from '@/types/app-node';
 import { nanoid } from 'nanoid';
@@ -8,7 +9,7 @@ export const createFlowNode = (
 ): AppNode => {
   return {
     id: nanoid(),
-    type: 'ZapflowNode',
+    type: nodeTypeMap[nodeType] || 'ZapflowNode',
     dragHandle: '.drag-handle',
     data: {
       type: nodeType,

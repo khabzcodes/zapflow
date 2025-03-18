@@ -16,5 +16,10 @@ export const GmailTriggerTask = {
       hideHandle: true,
     },
   ],
-  outputs: [],
+  outputs: [
+    {
+      name: 'Response',
+      type: TaskParamType.STRING,
+    },
+  ],
 };

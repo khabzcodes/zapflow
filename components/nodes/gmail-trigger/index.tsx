@@ -1,13 +1,14 @@
-import type { NodeProps } from '@xyflow/react';
+import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
-import { NodeCard } from './node-card';
-import { NodeHeader } from './node-header';
+import { NodeCard } from '../custom-node.tsx/node-card';
 import { AppNodeData } from '@/types/app-node';
 import { TaskRegistry } from '@/lib/workflows/task/registry';
-import { NodeInput, NodeInputs } from './node-inputs';
-import { NodeOutput, NodeOutputs } from './node-outputs';
+import { NodeHeader } from '../custom-node.tsx/node-header';
+import { NodeInput, NodeInputs } from '../custom-node.tsx/node-inputs';
+import { NodeOutput, NodeOutputs } from '../custom-node.tsx/node-outputs';
+import { GmailTriggerConfiguration } from './configuration';
 
-const CustomNode = memo((props: NodeProps) => {
+const GmailTriggerNode = memo((props: NodeProps) => {
   const data = props.data as AppNodeData;
   const task = TaskRegistry[data.type];
   return (
@@ -18,7 +19,7 @@ const CustomNode = memo((props: NodeProps) => {
         nodeId={props.id}
         taskType={data.type}
       />
-      <div className=""></div>
+      <GmailTriggerConfiguration />
       <NodeInputs>
         {task.inputs.map((input, idx) => (
           <NodeInput
@@ -40,5 +41,5 @@ const CustomNode = memo((props: NodeProps) => {
   );
 });
 
-export default CustomNode;
-CustomNode.displayName = 'CustomNode';
+export default GmailTriggerNode;
+GmailTriggerNode.displayName = 'GmailTriggerNode';

@@ -3,7 +3,7 @@ import { TaskType } from '@/enums/task-type';
 
 export const GetVariableFromResponseTask = {
   type: TaskType.GET_VARIABLE_FROM_RESPONSE,
-  label: 'Get Variable From Response',
+  label: 'Get variable',
   description: 'Get a value from the previously stored variable',
   icon: '/connections/tools.png',
   inputs: [
