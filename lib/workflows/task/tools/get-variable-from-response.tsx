@@ -17,7 +17,7 @@ export const GetVariableFromResponseTask = {
   outputs: [
     {
       name: 'Response',
-      type: TaskParamType.STRING,
+      type: TaskParamType.JSON,
     },
   ],
 };

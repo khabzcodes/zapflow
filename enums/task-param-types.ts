@@ -7,4 +7,6 @@ export enum TaskParamType {
   DATE = 'DATE',
   TIME = 'TIME',
   DATETIME = 'DATETIME',
+  JSON = 'JSON',
+  XML = 'XML',
 }

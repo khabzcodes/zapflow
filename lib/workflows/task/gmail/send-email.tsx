@@ -33,7 +33,7 @@ export const SendGmailEmailTask = {
   outputs: [
     {
       name: 'Response',
-      type: TaskParamType.STRING,
+      type: TaskParamType.JSON,
     },
   ],
 };

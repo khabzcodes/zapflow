@@ -21,6 +21,8 @@ import { CustomControls } from './controls/custom-controls';
 import { DeletableEdge } from '@/components/edges/deletable-edge';
 import { AppNode } from '@/types/app-node';
 import { nodeTypes } from '@/config/node-type-mapper';
+import { TaskRegistry } from '@/lib/workflows/task/registry';
+import { toast } from 'sonner';
 
 type WorkflowEditorProps = {
   workflow: Workflow;
@@ -122,6 +124,60 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
     [setEdges, edges, nodes],
   );
 
+  const isValidConnection = React.useCallback(
+    (connection: Edge | Connection) => {
+      if (connection.sourceHandle === connection.target) {
+        toast.error('Cannot connect a node to itself');
+        return false;
+      }
+
+      const source = nodes.find((nd) => nd.id === connection.source);
+      const target = nodes.find((nd) => nd.id === connection.target);
+      if (!source || !target) {
+        toast.error('Invalid connection');
+        return false;
+      }
+
+      const sourceType = source?.data?.type as keyof typeof TaskRegistry;
+      const targetType = target?.data?.type as keyof typeof TaskRegistry;
+
+      const sourceTask = TaskRegistry[sourceType];
+      const targetTask = TaskRegistry[targetType];
+
+      const output = sourceTask.outputs.find(
+        (o) => o.name === connection.sourceHandle,
+      );
+      const input = targetTask.inputs.find(
+        (i) => i.name === connection.targetHandle,
+      );
+      if (input?.type !== output?.type) {
+        toast.error('Invalid connection');
+        return false;
+      }
+
+      const hasCycle = (node: AppNode, visited = new Set()) => {
+        if (visited.has(node.id)) {
+          toast.error('Cycle detected');
+          return false;
+        }
+        visited.add(node.id);
+
+        for (const outgoer of getOutgoers(node, nodes, edges)) {
+          if (outgoer.id === connection.source) {
+            return true;
+          }
+          if (hasCycle(outgoer, visited)) {
+            return true;
+          }
+        }
+      };
+
+      const detectedCycle = hasCycle(target);
+      return !detectedCycle;
+    },
+    [edges, nodes],
+  );
+
   return (
     <main className="h-full w-full">
       <ReactFlow
@@ -139,6 +195,7 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
         onDragOver={onDragOver}
         onDrop={onDrop}
         onConnect={onConnect}
+        isValidConnection={isValidConnection}
         proOptions={{ hideAttribution: true }}>
         <CustomControls />
         <Background variant={BackgroundVariant.Dots} />
