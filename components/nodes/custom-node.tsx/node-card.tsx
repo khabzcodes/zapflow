@@ -30,7 +30,7 @@ export const NodeCard = ({ nodeId, selected, children }: NodeCardProps) => {
         });
       }}
       className={cn(
-        'cursor-pointer bg-background border-2 w-[420px] gap-1 flex flex-col',
+        'bg-background border-2 w-[420px] gap-1 flex flex-col drag-handle',
         selected && 'border-primary',
       )}>
       {children}
