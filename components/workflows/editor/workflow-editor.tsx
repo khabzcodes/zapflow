@@ -138,8 +138,8 @@ export const WorkflowEditor = ({ workflow }: WorkflowEditorProps) => {
         return false;
       }
 
-      const sourceType = source?.data?.type as keyof typeof TaskRegistry;
-      const targetType = target?.data?.type as keyof typeof TaskRegistry;
+      const sourceType = source?.data?.type;
+      const targetType = target?.data?.type;
 
       const sourceTask = TaskRegistry[sourceType];
       const targetTask = TaskRegistry[targetType];

@@ -1,12 +1,14 @@
+import { Icons } from '@/components/ui/icons';
 import { TaskParamType } from '@/enums/task-param-types';
 import { TaskType } from '@/enums/task-type';
+import { LucideProps } from 'lucide-react';
 
 export const AgentTask = {
   type: TaskType.AGENT,
   label: 'Agent',
   description:
     "Define the agent's instructions, then enter a task to complete using tools.",
-  icon: '/connections/agents.png',
+  icon: (props: LucideProps) => <Icons.bot {...props} />,
   inputs: [
     {
       name: 'Language Model',

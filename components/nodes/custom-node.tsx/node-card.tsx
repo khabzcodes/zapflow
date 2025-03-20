@@ -1,3 +1,4 @@
+import { useFlowValidation } from '@/hooks/workflows/use-flow-validation';
 import { cn } from '@/lib/utils';
 import { useReactFlow } from '@xyflow/react';
 
@@ -9,6 +10,11 @@ type NodeCardProps = {
 
 export const NodeCard = ({ nodeId, selected, children }: NodeCardProps) => {
   const { getNode, setCenter } = useReactFlow();
+  const { invalidInputs } = useFlowValidation();
+
+  const hasValidationErrors = invalidInputs.some(
+    (input) => input.nodeId === nodeId,
+  );
 
   return (
     <div
@@ -32,6 +38,7 @@ export const NodeCard = ({ nodeId, selected, children }: NodeCardProps) => {
       className={cn(
         'bg-background border-2 w-[420px] gap-1 flex flex-col drag-handle',
         selected && 'border-primary',
+        hasValidationErrors && 'border-destructive',
       )}>
       {children}
     </div>

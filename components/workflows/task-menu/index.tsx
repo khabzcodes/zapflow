@@ -7,7 +7,6 @@ import {
 import { TaskType } from '@/enums/task-type';
 import { taskMenuList } from '@/lib/workflows/menu/task-menu';
 import { TaskRegistry } from '@/lib/workflows/task/registry';
-import Image from 'next/image';
 
 export const TaskMenu = () => {
   return (
@@ -61,12 +60,9 @@ const TaskMenuButton = ({
       draggable
       onDragStart={(event) => onDragStart(event, taskType)}>
       <div className="flex items-center gap-2">
-        <Image
-          src={task.icon}
-          alt={task.label}
-          width={16}
-          height={16}
-        />
+        <div className="w-8 h-8 bg-secondary rounded-xl flex items-center justify-center p-2">
+          <task.icon />
+        </div>
         <div>
           <div className="font-medium text-sm">{task.label}</div>
           <div className="text-xs text-muted-foreground truncate">

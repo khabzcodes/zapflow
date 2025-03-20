@@ -19,7 +19,11 @@ export const GlobalLayout = ({
         <QueryClientProviderWrapper>
           <TooltipProvider>{children}</TooltipProvider>
         </QueryClientProviderWrapper>
-        <Toaster />
+        <Toaster
+          richColors
+          className="rounded-none"
+          expand={true}
+        />
       </body>
     </html>
   );
