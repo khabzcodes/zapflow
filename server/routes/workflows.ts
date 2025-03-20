@@ -12,6 +12,11 @@ import {
   getWorkflowsByOrganizationId,
   updateWorkflow,
 } from '../services/workflows';
+import { AppNode } from '@/types/app-node';
+import { Edge } from '@xyflow/react';
+import { FlowToExecutionPlan } from '@/lib/workflows/execution-plan';
+import { createExecution } from '../services/workflow-execution';
+import { createExecutionPhases } from '../services/workflow-execution-phase';
 
 export const workflowRoutes = new Hono<{
   Variables: {
@@ -136,6 +141,52 @@ export const workflowRoutes = new Hono<{
     } catch (error) {
       console.log(error);
 
+      return c.json({ error: 'Internal Server Error' }, 500);
+    }
+  })
+  .post('/:id/run', async (c) => {
+    try {
+      const session = c.get('session');
+      const workflowId = c.req.param('id');
+
+      if (!session || !session.activeOrganizationId || !session.userId) {
+        return c.json({ error: 'Unauthorized' }, 401);
+      }
+
+      const workflow = await getWorkflowById(workflowId);
+      if (!workflow) {
+        return c.json({ error: 'Workflow not found' }, 404);
+      }
+
+      const nodes = workflow.nodes as AppNode[];
+      const edges = workflow.edges as Edge[];
+
+      const { executionPlan, error } = FlowToExecutionPlan(nodes, edges);
+      if (error) {
+        return c.json({ error: 'Failed to create execution plan' }, 500);
+      }
+
+      const execution = await createExecution(
+        workflowId,
+        session.activeOrganizationId,
+      );
+      if (!execution) {
+        return c.json({ error: 'Failed to create execution' }, 500);
+      }
+
+      executionPlan?.flatMap((phase) => {
+        return phase.nodes.flatMap(async (node) => {
+          await createExecutionPhases(
+            execution.id,
+            phase.phase.toString(),
+            node,
+          );
+        });
+      });
+
+      return c.json({ message: 'Workflow run successfully' }, 200);
+    } catch (error) {
+      console.log(error);
       return c.json({ error: 'Internal Server Error' }, 500);
     }
   });

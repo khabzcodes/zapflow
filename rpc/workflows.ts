@@ -58,3 +58,15 @@ export const updateOrganizationWorkflow = async (
   const { workflow } = await response.json();
   return workflow;
 };
+
+export const runWorkflow = async (workflowId: string) => {
+  const response = await route[':id'].run.$post({ param: { id: workflowId } });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error);
+  }
+
+  const data = await response.json();
+
+  return data;
+};

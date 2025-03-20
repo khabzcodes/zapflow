@@ -5,50 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1741737441543,
+      "when": 1742498197735,
       "tag": "0000_init",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1741899561134,
-      "tag": "0001_integrations",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1741900522855,
-      "tag": "0002_modify_integrations",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1741900903798,
-      "tag": "0003_remove_lastUsedAt",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1742122008503,
-      "tag": "0004_insert_workflow_table",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1742122411866,
-      "tag": "0005_update_workflow_table",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1742235628061,
-      "tag": "0006_add_view_port_prop_to_workflow",
+      "when": 1742500619090,
+      "tag": "0001_add_name_to_execution_phase",
       "breakpoints": true
     }
   ]

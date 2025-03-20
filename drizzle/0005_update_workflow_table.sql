@@ -1,1 +1,0 @@
-CREATE TYPE "public"."workflow_status" AS ENUM('draft', 'active', 'inactive');

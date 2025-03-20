@@ -1,0 +1,1 @@
+ALTER TABLE "workflow_execution_phases" ADD COLUMN "name" text NOT NULL;

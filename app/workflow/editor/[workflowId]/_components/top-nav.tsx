@@ -25,7 +25,7 @@ export const TopNav = ({ workflowId, title, description }: TopNavProps) => {
       </div>
       <div className="flex gap-2">
         <SaveButton workflowId={workflowId} />
-        <ExecuteButton />
+        <ExecuteButton workflowId={workflowId} />
       </div>
     </div>
   );
