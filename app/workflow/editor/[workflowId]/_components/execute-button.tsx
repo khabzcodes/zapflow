@@ -3,32 +3,39 @@ import { Icons } from '@/components/ui/icons';
 import { useExecutionPlan } from '@/hooks/workflows/use-execution-plan';
 import { runWorkflow } from '@/rpc/workflows';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export const ExecuteButton = ({ workflowId }: { workflowId: string }) => {
   const generate = useExecutionPlan();
+  const router = useRouter();
 
   const mutation = useMutation({
-    mutationFn: async (workflowId: string) => await runWorkflow(workflowId),
-    onSuccess: () => {
-      console.log('---Workflow Executed---');
+    mutationFn: (workflowId: string) => runWorkflow(workflowId),
+    onSuccess: (response) => {
+      router.push(`/workflow/executions/${response.executionId}`);
     },
     onError: (error) => {
-      console.error('---Error Executing Workflow---');
-      console.error(error);
+      toast.error(error.message);
     },
   });
   return (
     <Button
-      onClick={async () => {
+      disabled={mutation.isPending}
+      onClick={() => {
         const plan = generate();
         if (!plan) {
           return;
         }
-        await mutation.mutateAsync(workflowId);
+        mutation.mutate(workflowId);
       }}
       size="sm"
       variant="outline">
-      <Icons.play />
+      {mutation.isPending ? (
+        <Icons.spinner className="animate-spin" />
+      ) : (
+        <Icons.play />
+      )}
       Execute
     </Button>
   );

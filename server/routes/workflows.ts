@@ -16,7 +16,6 @@ import { AppNode } from '@/types/app-node';
 import { Edge } from '@xyflow/react';
 import { FlowToExecutionPlan } from '@/lib/workflows/execution-plan';
 import { createExecution } from '../services/workflow-execution';
-import { createExecutionPhases } from '../services/workflow-execution-phase';
 
 export const workflowRoutes = new Hono<{
   Variables: {
@@ -162,29 +161,23 @@ export const workflowRoutes = new Hono<{
       const edges = workflow.edges as Edge[];
 
       const { executionPlan, error } = FlowToExecutionPlan(nodes, edges);
-      if (error) {
+      if (error || !executionPlan) {
         return c.json({ error: 'Failed to create execution plan' }, 500);
       }
 
       const execution = await createExecution(
         workflowId,
         session.activeOrganizationId,
+        executionPlan,
       );
-      if (!execution) {
-        return c.json({ error: 'Failed to create execution' }, 500);
-      }
 
-      executionPlan?.flatMap((phase) => {
-        return phase.nodes.flatMap(async (node) => {
-          await createExecutionPhases(
-            execution.id,
-            phase.phase.toString(),
-            node,
-          );
-        });
-      });
-
-      return c.json({ message: 'Workflow run successfully' }, 200);
+      return c.json(
+        {
+          workflowId: workflowId,
+          executionId: execution.id,
+        },
+        201,
+      );
     } catch (error) {
       console.log(error);
       return c.json({ error: 'Internal Server Error' }, 500);

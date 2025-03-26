@@ -1,5 +1,6 @@
 import { jsonb, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { workflowExecution } from './workflow-execution';
+import { relations } from 'drizzle-orm';
 
 export const executionPhaseStatusEnum = pgEnum('execution_phase_status', [
   'created',
@@ -22,3 +23,13 @@ export const workflowExecutionPhase = pgTable('workflow_execution_phases', {
   inputs: jsonb('inputs').notNull().default({}),
   outputs: jsonb('outputs').notNull().default({}),
 });
+
+export const workflowExecutionPhaseRelations = relations(
+  workflowExecutionPhase,
+  ({ one }) => ({
+    workflowExecution: one(workflowExecution, {
+      fields: [workflowExecutionPhase.workflowExecutionId],
+      references: [workflowExecution.id],
+    }),
+  }),
+);
