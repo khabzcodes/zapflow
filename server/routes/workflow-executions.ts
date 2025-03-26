@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth';
 import { Hono } from 'hono';
 import { getExecutionById } from '../services/workflow-execution';
 import { IWorkflowExecutionWithPhase } from '@/types/workflow-execution';
+import { AppNode } from '@/types/app-node';
 
 export const workflowExecutionRoutes = new Hono<{
   Variables: {
@@ -19,7 +20,13 @@ export const workflowExecutionRoutes = new Hono<{
     if (!executionResult) {
       return c.json({ error: 'Execution not found' }, 404);
     }
-    const execution: IWorkflowExecutionWithPhase = executionResult;
+    const execution: IWorkflowExecutionWithPhase = {
+      ...executionResult,
+      phases: executionResult.phases.map((phase) => ({
+        ...phase,
+        node: phase.node as AppNode,
+      })),
+    };
 
     return c.json({ execution }, 200);
   } catch (error) {
