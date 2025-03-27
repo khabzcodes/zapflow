@@ -1,5 +1,6 @@
 import { jsonb, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { member, organization } from './auth-schema';
+import { relations } from 'drizzle-orm';
 
 export const statusEnum = pgEnum('connection_status', [
   'connected',
@@ -22,3 +23,18 @@ export const connection = pgTable('connections', {
     .references(() => member.id),
   updatedById: text('updated_by_id').references(() => member.id),
 });
+
+export const connectionRelations = relations(connection, ({ one }) => ({
+  organization: one(organization, {
+    fields: [connection.organizationId],
+    references: [organization.id],
+  }),
+  createdBy: one(member, {
+    fields: [connection.createdById],
+    references: [member.id],
+  }),
+  updatedBy: one(member, {
+    fields: [connection.updatedById],
+    references: [member.id],
+  }),
+}));
