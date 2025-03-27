@@ -2,6 +2,7 @@ import { Icons } from '@/components/ui/icons';
 import { Separator } from '@/components/ui/separator';
 import { TaskRegistry } from '@/lib/workflows/task/registry';
 import { IWorkflowExecutionWithPhase } from '@/types/workflow-execution';
+import { datesToDuration } from '@/utils/dates-to-duration';
 import moment from 'moment';
 
 type ExecutionTaskMenuProps = {
@@ -13,6 +14,7 @@ export const ExecutionTaskMenu = ({
   execution,
   onSelectPhase,
 }: ExecutionTaskMenuProps) => {
+  const duration = datesToDuration(execution.startedAt, execution.completedAt);
   return (
     <div className="w-[340px] min-w-[340px] max-w-[340px] border-r-2 border-separate h-full p-2 px-4 overflow-auto">
       <div className="space-y-4">
@@ -29,7 +31,7 @@ export const ExecutionTaskMenu = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center text-muted-foreground gap-2">
               <Icons.timeSchedule className="size-3" />
-              <span>Created at</span>
+              <span>Started at</span>
             </div>
             <p className="font-bold">
               {moment(execution.startedAt).startOf('seconds').fromNow()}
@@ -38,14 +40,27 @@ export const ExecutionTaskMenu = ({
           {execution.completedAt && (
             <div className="flex items-center justify-between">
               <div className="flex items-center text-muted-foreground gap-2">
-                <Icons.timeSchedule className="size-3" />
+                <Icons.clock className="size-3" />
                 <span>Completed at</span>
               </div>
-              <p className="capitalize font-bold">
+              <p className="font-bold">
                 {moment(execution.completedAt).startOf('seconds').fromNow()}
               </p>
             </div>
           )}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-muted-foreground gap-2">
+              <Icons.clock className="size-3" />
+              <span>Duration</span>
+            </div>
+            <p className="font-bold">
+              {duration ? (
+                duration
+              ) : (
+                <Icons.spinner className="animate-spin w-3 h-3" />
+              )}
+            </p>
+          </div>
         </div>
         <div className="space-y-3 text-xs">
           <p className="text-xl font-bold">Flows</p>

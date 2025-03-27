@@ -65,7 +65,7 @@ export const executeWorkflow = async (executionId: string) => {
   await initializeWorkflowExecution(executionId, execution.workflowId);
   await initializeExecutionPhases(execution as IWorkflowExecutionWithPhase);
 
-  let executionFailed = false;
+  const executionFailed = false;
   for (const phase of execution.phases) {
     await executeWorkflowPhase(phase as IWorkflowExecutionPhase);
     //TODO: execute phase
@@ -132,7 +132,7 @@ export const finalizeWorkflowExecution = async (
 
 export const executeWorkflowPhase = async (phase: IWorkflowExecutionPhase) => {
   const startedAt = new Date();
-  const node = phase.node;
+  // const node = phase.node;
 
   await db
     .update(workflowExecutionPhase)

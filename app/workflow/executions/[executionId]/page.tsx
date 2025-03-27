@@ -26,7 +26,7 @@ const ExecutionPage = ({
     refetchInterval: (query) =>
       query.state.data?.status === 'running' ? 1000 : false,
   });
-  const { data: phaseDetails, isLoading: isLoadingPhase } = useQuery({
+  const { data: phaseDetails } = useQuery({
     queryKey: [QUERY_KEYS.GET_WORKFLOW_EXECUTION_PHASE_BY_ID, selectedPhaseId],
     enabled: !!selectedPhaseId,
     queryFn: () => getWorkflowExecutionPhase(selectedPhaseId!),
@@ -69,6 +69,18 @@ const ExecutionPage = ({
                     : null,
                   startedAt: new Date(phase.startedAt),
                 })),
+                workflow: {
+                  ...data.workflow,
+                  createdAt: data.workflow.createdAt
+                    ? new Date(data.workflow.createdAt)
+                    : null,
+                  updatedAt: data.workflow.updatedAt
+                    ? new Date(data.workflow.updatedAt)
+                    : null,
+                  lastRunAt: data.workflow.lastRunAt
+                    ? new Date(data.workflow.lastRunAt)
+                    : null,
+                },
               }}
               onSelectPhase={(phaseId) => setSelectedPhaseId(phaseId)}
             />

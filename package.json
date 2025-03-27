@@ -29,6 +29,7 @@
     "better-auth": "^1.2.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "drizzle-orm": "^0.40.0",
     "googleapis": "^146.0.0",
     "hono": "^4.7.4",
