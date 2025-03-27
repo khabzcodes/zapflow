@@ -19,6 +19,7 @@ import {
   workflowExecutionPhaseRelations,
 } from './schemas/workflow-execution-phase';
 import {} from './schemas/workflow-execution';
+import { connection } from './schemas/connection';
 
 const connectionString = process.env.DATABASE_URL!;
 
@@ -33,6 +34,7 @@ export const db = drizzle(client, {
     workflow,
     workflowExecution,
     workflowExecutionPhase,
+    connection,
     // Relations
     memberRelations,
     workflowExecutionRelations,
