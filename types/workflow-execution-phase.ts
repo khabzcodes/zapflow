@@ -3,7 +3,7 @@ import { AppNode } from '@/types/app-node'; // Add this import
 export type IWorkflowExecutionPhase = {
   id: string;
   name: string;
-  status: 'running' | 'completed' | 'failed' | 'created';
+  status: 'running' | 'completed' | 'failed' | 'created' | 'pending';
   completedAt: Date | null;
   workflowExecutionId: string;
   phaseNumber: string;

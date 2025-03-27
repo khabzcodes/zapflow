@@ -12,4 +12,7 @@ export enum QUERY_KEYS {
 
   // Workflow Executions
   GET_WORKFLOW_EXECUTION_BY_ID = 'GET_WORKFLOW_EXECUTION_BY_ID',
+
+  // Workflow Execution Phases
+  GET_WORKFLOW_EXECUTION_PHASE_BY_ID = 'GET_WORKFLOW_EXECUTION_PHASE_BY_ID',
 }

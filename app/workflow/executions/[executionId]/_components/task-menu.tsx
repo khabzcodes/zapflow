@@ -6,13 +6,17 @@ import moment from 'moment';
 
 type ExecutionTaskMenuProps = {
   execution: IWorkflowExecutionWithPhase;
+  onSelectPhase: (phaseId: string) => void;
 };
 
-export const ExecutionTaskMenu = ({ execution }: ExecutionTaskMenuProps) => {
+export const ExecutionTaskMenu = ({
+  execution,
+  onSelectPhase,
+}: ExecutionTaskMenuProps) => {
   return (
     <div className="w-[340px] min-w-[340px] max-w-[340px] border-r-2 border-separate h-full p-2 px-4 overflow-auto">
-      <div className="space-y-3">
-        <div className="space-y-3 text-xs">
+      <div className="space-y-4">
+        <div className="space-y-4 text-xs">
           <p className="text-xl font-bold">Details</p>
           <Separator />
           <div className="flex items-center justify-between">
@@ -27,8 +31,8 @@ export const ExecutionTaskMenu = ({ execution }: ExecutionTaskMenuProps) => {
               <Icons.timeSchedule className="size-3" />
               <span>Created at</span>
             </div>
-            <p className="capitalize font-bold">
-              {moment(execution.createdAt).startOf('minutes').fromNow()}
+            <p className="font-bold">
+              {moment(execution.startedAt).startOf('seconds').fromNow()}
             </p>
           </div>
           {execution.completedAt && (
@@ -38,7 +42,7 @@ export const ExecutionTaskMenu = ({ execution }: ExecutionTaskMenuProps) => {
                 <span>Completed at</span>
               </div>
               <p className="capitalize font-bold">
-                {moment(execution.completedAt).endOf('days').fromNow()}
+                {moment(execution.completedAt).startOf('seconds').fromNow()}
               </p>
             </div>
           )}
@@ -50,8 +54,9 @@ export const ExecutionTaskMenu = ({ execution }: ExecutionTaskMenuProps) => {
             const task = TaskRegistry[phase.node.data.type];
             return (
               <div
+                onClick={() => onSelectPhase(phase.id)}
                 key={phase.id}
-                className="flex items-center justify-between">
+                className="flex items-center justify-between cursor-pointer">
                 <div className="flex items-center text-muted-foreground gap-2">
                   <div className="w-8 h-8 bg-secondary rounded-xl flex items-center justify-center p-2">
                     <task.icon />

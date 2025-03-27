@@ -18,6 +18,9 @@ export const workflow = pgTable('workflows', {
   nodes: jsonb('nodes').notNull().default([]),
   edges: jsonb('edges').notNull().default([]),
   viewPort: jsonb('view_port').notNull().default({}),
+  lastRunId: text('last_run_id'),
+  lastRunAt: timestamp('last_run_at'),
+  lastRunStatus: text('last_run_status'),
   createdById: text('created_by_id')
     .notNull()
     .references(() => member.id),

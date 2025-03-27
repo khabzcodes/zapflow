@@ -4,6 +4,7 @@ import { relations } from 'drizzle-orm';
 
 export const executionPhaseStatusEnum = pgEnum('execution_phase_status', [
   'created',
+  'pending',
   'running',
   'completed',
   'failed',

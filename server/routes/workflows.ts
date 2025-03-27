@@ -15,7 +15,10 @@ import {
 import { AppNode } from '@/types/app-node';
 import { Edge } from '@xyflow/react';
 import { FlowToExecutionPlan } from '@/lib/workflows/execution-plan';
-import { createExecution } from '../services/workflow-execution';
+import {
+  createExecution,
+  executeWorkflow,
+} from '../services/workflow-execution';
 
 export const workflowRoutes = new Hono<{
   Variables: {
@@ -170,6 +173,10 @@ export const workflowRoutes = new Hono<{
         session.activeOrganizationId,
         executionPlan,
       );
+
+      if (execution.status === 'pending') {
+        executeWorkflow(execution.id);
+      }
 
       return c.json(
         {

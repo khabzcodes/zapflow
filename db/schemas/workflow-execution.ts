@@ -23,6 +23,7 @@ export const workflowExecution = pgTable('workflow_executions', {
   trigger: triggerTypeEnum('trigger').notNull().default('manual'),
   status: executionStatusEnum('status').notNull().default('pending'),
   createdAt: timestamp('created_at').defaultNow(),
+  startedAt: timestamp('started_at'),
   completedAt: timestamp('completed_at'),
 });
 

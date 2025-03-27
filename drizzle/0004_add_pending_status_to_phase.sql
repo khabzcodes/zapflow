@@ -1,0 +1,1 @@
+ALTER TYPE "public"."execution_phase_status" ADD VALUE 'pending' BEFORE 'running';

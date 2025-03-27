@@ -8,16 +8,28 @@ import { TopNav } from '../../editor/[workflowId]/_components/top-nav';
 import { FlowValidationContextProvider } from '@/context/flow-validation-context';
 import { ReactFlowProvider } from '@xyflow/react';
 import { ExecutionTaskMenu } from './_components/task-menu';
+import { getWorkflowExecutionPhase } from '@/rpc/workflow-execution-phases';
 
 const ExecutionPage = ({
   params,
 }: {
   params: Promise<{ executionId: string }>;
 }) => {
+  const [selectedPhaseId, setSelectedPhaseId] = React.useState<string | null>(
+    null,
+  );
+
   const { executionId } = React.use(params);
   const { data, isPending, error } = useQuery({
-    queryKey: [QUERY_KEYS.GET_WORKFLOW_EXECUTION_BY_ID, { executionId }],
+    queryKey: [QUERY_KEYS.GET_WORKFLOW_EXECUTION_BY_ID, executionId],
     queryFn: async () => await getWorkflowExecution(executionId),
+    refetchInterval: (query) =>
+      query.state.data?.status === 'running' ? 1000 : false,
+  });
+  const { data: phaseDetails, isLoading: isLoadingPhase } = useQuery({
+    queryKey: [QUERY_KEYS.GET_WORKFLOW_EXECUTION_PHASE_BY_ID, selectedPhaseId],
+    enabled: !!selectedPhaseId,
+    queryFn: () => getWorkflowExecutionPhase(selectedPhaseId!),
   });
 
   if (isPending) {
@@ -46,6 +58,7 @@ const ExecutionPage = ({
               execution={{
                 ...data,
                 createdAt: data.createdAt ? new Date(data.createdAt) : null,
+                startedAt: data.startedAt ? new Date(data.startedAt) : null,
                 completedAt: data.completedAt
                   ? new Date(data.completedAt)
                   : null,
@@ -57,8 +70,9 @@ const ExecutionPage = ({
                   startedAt: new Date(phase.startedAt),
                 })),
               }}
+              onSelectPhase={(phaseId) => setSelectedPhaseId(phaseId)}
             />
-            <div>{JSON.stringify(data, null, 2)}</div>
+            <pre>{JSON.stringify(phaseDetails, null, 4)}</pre>
           </section>
         </div>
       </ReactFlowProvider>

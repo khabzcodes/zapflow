@@ -5,6 +5,7 @@ import { connectionRoutes } from './routes/connections';
 import { integrationRoutes } from './routes/integrations';
 import { workflowRoutes } from './routes/workflows';
 import { workflowExecutionRoutes } from './routes/workflow-executions';
+import { workflowExecutionPhaseRoutes } from './routes/workflow-execution-phases';
 
 const app = new Hono<{
   Variables: {
@@ -41,7 +42,8 @@ const routes = app
   .route('/connections', connectionRoutes)
   .route('/integrations', integrationRoutes)
   .route('/workflows', workflowRoutes)
-  .route('/workflowExecutions', workflowExecutionRoutes);
+  .route('/workflowExecutions', workflowExecutionRoutes)
+  .route('/workflowExecutionPhases', workflowExecutionPhaseRoutes);
 
 export default app;
 export type AppTypes = typeof routes;
