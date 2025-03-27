@@ -2,7 +2,9 @@ import { db } from '@/db';
 import { workflow } from '@/db/schemas/workflow';
 import { workflowExecution } from '@/db/schemas/workflow-execution';
 import { workflowExecutionPhase } from '@/db/schemas/workflow-execution-phase';
+import { ExecutorRegistry } from '@/server/services/executors/registry';
 import { TaskRegistry } from '@/lib/workflows/task/registry';
+import { AppNode } from '@/types/app-node';
 import { WorkflowExecutionPlan } from '@/types/workflow';
 import { IWorkflowExecutionWithPhase } from '@/types/workflow-execution';
 import { IWorkflowExecutionPhase } from '@/types/workflow-execution-phase';
@@ -61,14 +63,12 @@ export const executeWorkflow = async (executionId: string) => {
     throw new Error('Execution not found');
   }
 
-  //TODO: setup execution environment
   await initializeWorkflowExecution(executionId, execution.workflowId);
   await initializeExecutionPhases(execution as IWorkflowExecutionWithPhase);
 
   const executionFailed = false;
   for (const phase of execution.phases) {
     await executeWorkflowPhase(phase as IWorkflowExecutionPhase);
-    //TODO: execute phase
   }
 
   await finalizeWorkflowExecution(
@@ -132,7 +132,6 @@ export const finalizeWorkflowExecution = async (
 
 export const executeWorkflowPhase = async (phase: IWorkflowExecutionPhase) => {
   const startedAt = new Date();
-  // const node = phase.node;
 
   await db
     .update(workflowExecutionPhase)
@@ -142,13 +141,9 @@ export const executeWorkflowPhase = async (phase: IWorkflowExecutionPhase) => {
     })
     .where(eq(workflowExecutionPhase.id, phase.id));
 
-  // TODO: execute task
-  // Set a timeout to simulate task execution
-  setTimeout(async () => {
-    await finalizeWorkflowPhase(phase.id, false);
-  }, 2000);
+  const success = executePhase(phase, phase.node);
 
-  const success = Math.random() > 0.5;
+  await finalizeWorkflowPhase(phase.id, false);
 
   return { success };
 };
@@ -164,4 +159,16 @@ export const finalizeWorkflowPhase = async (
       completedAt: new Date(),
     })
     .where(eq(workflowExecutionPhase.id, phaseId));
+};
+
+export const executePhase = async (
+  phase: IWorkflowExecutionPhase,
+  node: AppNode,
+) => {
+  const runFn = ExecutorRegistry[node.data.type];
+  if (!runFn) {
+    return false;
+  }
+
+  return await runFn();
 };
