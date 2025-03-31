@@ -37,6 +37,7 @@ export default function EditorPage({
         ...workflow,
         createdAt: workflow?.createdAt ? new Date(workflow.createdAt) : null,
         updatedAt: workflow?.updatedAt ? new Date(workflow.updatedAt) : null,
+        lastRunAt: workflow?.lastRunAt ? new Date(workflow.lastRunAt) : null,
       }}
     />
   );
