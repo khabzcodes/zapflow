@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { GlobalLayout } from '@/components/layouts/global-layout';
+import { MarketingPageHeader } from '@/components/shared/marketing-page-header';
 
 export const metadata: Metadata = {
   title:
@@ -18,5 +19,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <GlobalLayout>{children}</GlobalLayout>;
+  return (
+    <GlobalLayout>
+      <MarketingPageHeader />
+      {children}
+    </GlobalLayout>
+  );
 }

@@ -1,3 +1,9 @@
 export default function Home() {
-  return <h1>Hello World</h1>;
+  return (
+    <div className="relative grid h-full flex-1 place-items-center overflow-hidden">
+      <div className="z-10 flex flex-col items-center space-y-6">
+        <div className="space-y-1 text-center"></div>
+      </div>
+    </div>
+  );
 }

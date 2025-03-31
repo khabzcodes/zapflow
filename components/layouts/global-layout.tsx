@@ -3,6 +3,7 @@ import { Space_Grotesk } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { QueryClientProviderWrapper } from '@/lib/query-client';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { ThemeProvider } from 'next-themes';
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
 
@@ -16,14 +17,21 @@ export const GlobalLayout = ({
       <body
         className={`${spaceGrotesk.className} antialiased`}
         suppressHydrationWarning>
-        <QueryClientProviderWrapper>
-          <TooltipProvider>{children}</TooltipProvider>
-        </QueryClientProviderWrapper>
-        <Toaster
-          richColors
-          className="rounded-none"
-          expand={true}
-        />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          storageKey="theme"
+          disableTransitionOnChange={false}>
+          <QueryClientProviderWrapper>
+            <TooltipProvider>{children}</TooltipProvider>
+          </QueryClientProviderWrapper>
+          <Toaster
+            richColors
+            className="rounded-none"
+            expand={true}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );
