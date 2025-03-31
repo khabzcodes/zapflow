@@ -1,155 +1,72 @@
 import { auth } from '@/lib/auth';
 import { Hono } from 'hono';
-import { google } from 'googleapis';
-import { createIntegration } from '../services/integrations';
 import { getMemberByOrganizationAndUserId } from '../services/members';
-import { oauthClient } from '@/lib/google-oauth-client';
-import { GOOGLE_CALENDAR_SCOPES } from '@/config/scopes';
+import { createOrganizationConnection } from '../services/connections';
+import { ConnectionInput } from '@/types/connection';
+import { zValidator } from '@hono/zod-validator';
+import { z } from 'zod';
 
 export const connectionRoutes = new Hono<{
   Variables: {
     session: typeof auth.$Infer.Session.session | null;
   };
-}>()
-  .get('/connect/google-sheets', async (c) => {
+}>().post(
+  '/credentials/:provider',
+  zValidator(
+    'json',
+    z.object({
+      configName: z.string().min(1, 'Configuration name is required'),
+      credentials: z.array(
+        z.object({
+          name: z.string(),
+          label: z.string(),
+          type: z.string(),
+          required: z.boolean(),
+          variant: z.string().optional(),
+          value: z.string(),
+        }),
+      ),
+    }),
+  ),
+  async (c) => {
     try {
-      const session = c.get('session');
-      if (!session || !session.activeOrganizationId) {
-        return c.json({ message: 'Unauthorized' });
-      }
-      const oauthClient = new google.auth.OAuth2(
-        process.env.GOOGLE_CLIENT_ID,
-        process.env.GOOGLE_CLIENT_SECRET,
-        `${process.env.BETTER_AUTH_URL}/api/server/connections/callback/google-sheet`,
-      );
+      const body: {
+        configName: string;
+        credentials: ConnectionInput[];
+      } = await c.req.json();
 
-      const authUrl = oauthClient.generateAuthUrl({
-        scope:
-          'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/spreadsheets',
-        access_type: 'offline',
-        prompt: 'consent',
-      });
-
-      return c.redirect(authUrl);
-    } catch (error) {
-      // TODO: logger
-      console.log(error);
-      return c.json({ error: 'Internal Server Error' }, 500);
-    }
-  })
-  .get('/callback/google-sheet', async (c) => {
-    try {
       const session = c.get('session');
+      const provider = c.req.param('provider');
+
       if (!session || !session.activeOrganizationId || !session.userId) {
-        return c.json({ message: 'Unauthorized' }, 401);
-      }
-      const code = c.req.query('code');
-      if (!code) {
-        return c.json({ error: 'Invalid code' }, 400);
-      }
-
-      const oauthClient = new google.auth.OAuth2(
-        process.env.GOOGLE_CLIENT_ID,
-        process.env.GOOGLE_CLIENT_SECRET,
-        `${process.env.BETTER_AUTH_URL}/api/server/connections/callback/google-sheet`,
-      );
-
-      const { tokens } = await oauthClient.getToken(code);
-
-      const organizationId = session.activeOrganizationId;
-      const userId = session.userId;
-      const appName = 'google-sheets';
-      const credentials = JSON.stringify(tokens);
-
-      const member = await getMemberByOrganizationAndUserId(
-        organizationId,
-        userId,
-      );
-      if (!member) {
-        return c.json({ error: 'Member not found' }, 404);
-      }
-
-      const integration = await createIntegration(
-        organizationId,
-        member.id,
-        appName,
-        credentials,
-      );
-      if (!integration) {
-        return c.json({ error: 'Failed to create integration' }, 500);
-      }
-
-      return c.redirect(`${process.env.BETTER_APP_URL}/app/integrations`);
-    } catch (error) {
-      // TODO: logger
-      console.log(error);
-      return c.json({ error: 'Internal Server Error' }, 500);
-    }
-  })
-  .get('/connect/google-calendar', async (c) => {
-    try {
-      const session = c.get('session');
-      if (!session || !session.activeOrganizationId) {
         return c.json({ error: 'Unauthorized' }, 401);
       }
 
-      const authUrl = oauthClient(
-        'api/server/connections/callback/google-calendar',
-      ).generateAuthUrl({
-        scope: GOOGLE_CALENDAR_SCOPES,
-        access_type: 'offline',
-        prompt: 'consent',
-      });
-
-      return c.redirect(authUrl);
-    } catch (error) {
-      console.log(error);
-      return c.json({ error: 'Internal Server Error' }, 500);
-    }
-  })
-  .get('/callback/google-calendar', async (c) => {
-    try {
-      const session = c.get('session');
-      if (!session || !session.activeOrganizationId || !session.userId) {
-        return c.json({ message: 'Unauthorized' }, 401);
-      }
-
-      const code = c.req.query('code');
-      if (!code) {
-        return c.json({ error: 'Invalid code' }, 400);
-      }
-
-      const googleClient = oauthClient(
-        'api/server/connections/callback/google-calendar',
-      );
-      const { tokens } = await googleClient.getToken(code);
-
-      const organizationId = session.activeOrganizationId;
-      const userId = session.userId;
-      const appName = 'google-calendar';
-      const credentials = JSON.stringify(tokens);
-
       const member = await getMemberByOrganizationAndUserId(
-        organizationId,
-        userId,
+        session.activeOrganizationId,
+        session.userId,
       );
       if (!member) {
-        return c.json({ error: 'Member not found' }, 404);
+        return c.json({ error: 'Unauthorized' }, 401);
       }
 
-      const integration = await createIntegration(
-        organizationId,
+      await createOrganizationConnection(
+        session.activeOrganizationId,
+        provider,
         member.id,
-        appName,
-        credentials,
+        body.configName,
+        body.credentials,
       );
-      if (!integration) {
-        return c.json({ error: 'Failed to create integration' }, 500);
-      }
 
-      return c.redirect(`/app/integrations/${appName}`);
+      return c.json(
+        {
+          message: 'Connection created successfully',
+        },
+        200,
+      );
     } catch (error) {
       console.log(error);
-      return c.json({ error: 'Internal Server Error' }, 500);
+      return new Response('Internal Server Error', { status: 500 });
     }
-  });
+  },
+);

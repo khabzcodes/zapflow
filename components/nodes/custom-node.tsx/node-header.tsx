@@ -19,7 +19,7 @@ export const NodeHeader = ({ nodeId, taskType }: NodeHeaderProps) => {
   return (
     <div className="gap-2 p-2 space-y-2">
       <div className="flex items-center">
-        <div className="w-8 h-8 bg-secondary rounded-xl flex items-center justify-center p-2 mr-1">
+        <div className="w-8 h-8 bg-secondary rounded-sm flex items-center justify-center p-2 mr-1">
           <task.icon />
         </div>
         <div className="flex justify-between items-center w-full">

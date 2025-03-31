@@ -68,14 +68,14 @@ export const AppSidebar = ({ user, ...props }: AppSidebarProps) => {
                   key={idx}
                   className={
                     pathName.includes(item.title.toLowerCase())
-                      ? 'bg-green-100 text-black'
+                      ? 'bg-accent-foreground/25 text-black rounded-sm'
                       : ''
                   }>
                   <SidebarMenuButton>
                     <Link
                       href={item.url}
                       className="flex items-center gap-2">
-                      <Icon size={16} />
+                      <Icon className="w-4 h-4" />
                       {item.title}
                     </Link>
                   </SidebarMenuButton>
@@ -94,14 +94,14 @@ export const AppSidebar = ({ user, ...props }: AppSidebarProps) => {
                   key={item.title}
                   className={
                     pathName.includes(item.title.toLowerCase())
-                      ? 'bg-green-100 text-black'
+                      ? 'bg-accent-foreground/25 text-black rounded-sm'
                       : ''
                   }>
                   <SidebarMenuButton>
                     <Link
                       href={item.url}
                       className="flex items-center gap-2">
-                      <Icon size={16} />
+                      <Icon className="w-4 h-4" />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>

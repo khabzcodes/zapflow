@@ -94,7 +94,7 @@ export const SignInForm = ({ className, ...props }: SignInFormProps) => {
         variant="outline"
         onClick={githubSignIn}>
         {githubSignInLoading ? (
-          <Icons.spinner className="w-6 h-6 mr-2" />
+          <Icons.spinner className="w-6 h-6 mr-2 animate-spin" />
         ) : (
           <>
             <Icons.github className="w-6 h-6 mr-2" />

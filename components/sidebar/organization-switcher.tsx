@@ -40,7 +40,7 @@ export function OrganizationSwitcher({
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground border">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground bg-background">
                 <Icons.building className="size-4 text-black" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">

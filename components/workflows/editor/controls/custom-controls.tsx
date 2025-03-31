@@ -23,7 +23,7 @@ export const CustomControls = () => {
 
   return (
     <Controls
-      className="bg-black p-1"
+      className="dark:bg-black p-1"
       showFitView={false}
       showZoom={false}
       showInteractive={false}

@@ -12,8 +12,8 @@ export const sidebarMainMenu: SideNavItem[] = [
     icon: 'nodeMoveUp',
   },
   {
-    title: 'Integrations',
-    url: '/app/integrations',
+    title: 'Connections',
+    url: '/app/connections',
     icon: 'plugSocket',
   },
 ];
