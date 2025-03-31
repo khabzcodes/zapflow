@@ -10,7 +10,13 @@ export default function Home() {
         <MarketingPageHeader />
         <div className="relative grid h-full flex-1 place-items-center overflow-hidden">
           <div className="z-10 flex flex-col items-center space-y-6">
-            <div className="space-y-1 text-center"></div>
+            <div className="space-y-1 text-center">
+              <h1 className="max-w-2xl text-2xl font-bold text-muted-foreground">
+                Streamline tasks, integrate seamlessly, and scale
+                effortlessly—no code required. Focus on what matters while our
+                intelligent automation handles the rest.
+              </h1>
+            </div>
           </div>
         </div>
         <GridPattern
