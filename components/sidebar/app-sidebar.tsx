@@ -17,8 +17,7 @@ import { OrganizationSwitcher } from './organization-switcher';
 import { useActiveOrganization, useListOrganizations } from '@/lib/auth-client';
 import { Skeleton } from '../ui/skeleton';
 import { UserNav } from './user-nav';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   user: {
@@ -36,6 +35,7 @@ export const AppSidebar = ({ user, ...props }: AppSidebarProps) => {
     useListOrganizations();
 
   const pathName = usePathname();
+  const { replace } = useRouter();
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -65,19 +65,16 @@ export const AppSidebar = ({ user, ...props }: AppSidebarProps) => {
               const Icon = Icons[item.icon];
               return (
                 <SidebarMenuItem
+                  onClick={() => replace(item.url)}
                   key={idx}
                   className={
                     pathName.includes(item.title.toLowerCase())
-                      ? 'bg-accent-foreground/25 text-black rounded-sm'
-                      : ''
+                      ? 'bg-accent-foreground/25 text-black rounded-sm cursor-pointer'
+                      : 'cursor-pointer'
                   }>
                   <SidebarMenuButton>
-                    <Link
-                      href={item.url}
-                      className="flex items-center gap-2">
-                      <Icon className="w-4 h-4" />
-                      {item.title}
-                    </Link>
+                    <Icon className="w-4 h-4" />
+                    <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );
@@ -91,19 +88,16 @@ export const AppSidebar = ({ user, ...props }: AppSidebarProps) => {
               const Icon = Icons[item.icon];
               return (
                 <SidebarMenuItem
+                  onClick={() => replace(item.url)}
                   key={item.title}
                   className={
                     pathName.includes(item.title.toLowerCase())
-                      ? 'bg-accent-foreground/25 text-black rounded-sm'
-                      : ''
+                      ? 'bg-accent-foreground/25 text-black rounded-sm cursor-pointer'
+                      : 'cursor-pointer'
                   }>
                   <SidebarMenuButton>
-                    <Link
-                      href={item.url}
-                      className="flex items-center gap-2">
-                      <Icon className="w-4 h-4" />
-                      <span>{item.title}</span>
-                    </Link>
+                    <Icon className="w-4 h-4" />
+                    <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );
