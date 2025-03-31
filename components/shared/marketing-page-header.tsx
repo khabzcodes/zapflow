@@ -27,7 +27,7 @@ export const MarketingPageHeader = () => {
                 </Link>
               ) : (
                 <Link
-                  href="/dashboard"
+                  href="/app"
                   className={cn(
                     buttonVariants({ variant: 'default', size: 'sm' }),
                   )}>
