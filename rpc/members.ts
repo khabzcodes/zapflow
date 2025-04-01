@@ -1,6 +1,6 @@
-import { baseApiRoute } from './config';
+import { baseApiRouteWithAuth } from './config';
 
-const route = baseApiRoute.members;
+const route = baseApiRouteWithAuth.members;
 
 export const getOrganizationMembers = async () => {
   const response = await route.$get();

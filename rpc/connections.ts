@@ -1,7 +1,7 @@
 import { ConnectionInput } from '@/types/connection';
-import { baseApiRoute } from './config';
+import { baseApiRouteWithAuth } from './config';
 
-const route = baseApiRoute.connections;
+const route = baseApiRouteWithAuth.connections;
 
 export const createOrganizationConnection = async (
   provider: string,

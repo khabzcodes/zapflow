@@ -1,6 +1,6 @@
-import { baseApiRoute } from './config';
+import { baseApiRouteWithAuth } from './config';
 
-const route = baseApiRoute.workflowExecutionPhases;
+const route = baseApiRouteWithAuth.workflowExecutionPhases;
 
 export const getWorkflowExecutionPhase = async (phaseId: string) => {
   const response = await route[':id'].$get({ param: { id: phaseId } });

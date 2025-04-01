@@ -6,7 +6,6 @@ import {
   waitingListSchema,
 } from '@/validations/waiting-list';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ComponentPropsWithRef } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Form,
@@ -25,10 +24,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { Button } from '../ui/button';
 
-type WaitingListFormProps = ComponentPropsWithRef<'div'>;
+interface WaitingListFormProps {
+  handleFormSubmit: (data: WaitingListFormData) => void;
+  isLoading: boolean;
+}
 
-export const WaitingListForm = ({ className }: WaitingListFormProps) => {
+export const WaitingListForm = ({
+  handleFormSubmit,
+  isLoading,
+}: WaitingListFormProps) => {
   const form = useForm<WaitingListFormData>({
     resolver: zodResolver(waitingListSchema),
     defaultValues: {
@@ -40,10 +46,10 @@ export const WaitingListForm = ({ className }: WaitingListFormProps) => {
   });
 
   const handleSubmit = async (data: WaitingListFormData) => {
-    console.table(data);
+    handleFormSubmit(data);
   };
   return (
-    <div className={cn('flex flex-col gap-6', className)}>
+    <div className={cn('flex flex-col gap-6')}>
       <div className="flex flex-col gap-2">
         <Logo />
         <h1 className="text-2xl font-bold">Join waiting list</h1>
@@ -66,7 +72,7 @@ export const WaitingListForm = ({ className }: WaitingListFormProps) => {
                   <Input {...field} />
                 </FormControl>
                 <FormMessage
-                  {...form}
+                  {...field}
                   className="text-destructive text-xs"
                 />
               </FormItem>
@@ -85,7 +91,7 @@ export const WaitingListForm = ({ className }: WaitingListFormProps) => {
                   <Input {...field} />
                 </FormControl>
                 <FormMessage
-                  {...form}
+                  {...field}
                   className="text-destructive text-xs"
                 />
               </FormItem>
@@ -104,7 +110,7 @@ export const WaitingListForm = ({ className }: WaitingListFormProps) => {
                   />
                 </FormControl>
                 <FormMessage
-                  {...form}
+                  {...field}
                   className="text-destructive text-xs"
                 />
               </FormItem>
@@ -136,12 +142,18 @@ export const WaitingListForm = ({ className }: WaitingListFormProps) => {
                   </SelectContent>
                 </Select>
                 <FormMessage
-                  {...form}
+                  {...field}
                   className="text-destructive text-xs"
                 />
               </FormItem>
             )}
           />
+          <Button
+            disabled={isLoading}
+            type="submit"
+            size="sm">
+            Join waiting list
+          </Button>
         </form>
       </Form>
     </div>

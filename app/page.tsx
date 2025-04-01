@@ -2,6 +2,7 @@ import { GridPattern } from '@/components/shared/grid-pattern';
 import { MarketingPageFooter } from '@/components/shared/marketing-page-footer';
 import { MarketingPageHeader } from '@/components/shared/marketing-page-header';
 import { buttonVariants } from '@/components/ui/button';
+import { BorderBeam } from '@/components/magicui/border-beam';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -23,7 +24,18 @@ export default function Home() {
               href="/waiting-list"
               className={cn(
                 buttonVariants({ variant: 'default', size: 'sm' }),
+                'relative overflow-hidden',
               )}>
+              <BorderBeam
+                size={40}
+                initialOffset={20}
+                className="from-transparent via-green-500 to-transparent"
+                transition={{
+                  type: 'spring',
+                  stiffness: 60,
+                  damping: 20,
+                }}
+              />
               Join waitlist
             </Link>
           </div>

@@ -2,9 +2,9 @@ import {
   CreateWorkflowInputData,
   UpdateWorkflowInputData,
 } from '@/validations/workflows';
-import { baseApiRoute } from './config';
+import { baseApiRouteWithAuth } from './config';
 
-const route = baseApiRoute.workflows;
+const route = baseApiRouteWithAuth.workflows;
 
 export const getOrganizationWorkflows = async () => {
   const response = await route.$get();

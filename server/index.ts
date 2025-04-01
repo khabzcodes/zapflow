@@ -6,6 +6,7 @@ import { integrationRoutes } from './routes/integrations';
 import { workflowRoutes } from './routes/workflows';
 import { workflowExecutionRoutes } from './routes/workflow-executions';
 import { workflowExecutionPhaseRoutes } from './routes/workflow-execution-phases';
+import { waitlistRoutes } from './routes/waiting-list';
 
 const app = new Hono<{
   Variables: {
@@ -15,11 +16,15 @@ const app = new Hono<{
   };
 }>().basePath('/api/server');
 
-app.on(['POST', 'GET', 'PUT', 'DELETE', 'PATCH'], '/api/server/*', (c) => {
-  return auth.handler(c.req.raw);
-});
+app.on(
+  ['POST', 'GET', 'PUT', 'DELETE', 'PATCH'],
+  '/api/server/protected/*',
+  (c) => {
+    return auth.handler(c.req.raw);
+  },
+);
 
-app.use('*', async (c, next) => {
+app.use('/api/server/protected/*', async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
   const member = await auth.api.getActiveMember({ headers: c.req.raw.headers });
 
@@ -38,12 +43,13 @@ app.use('*', async (c, next) => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app
-  .route('/members', memberRoutes)
-  .route('/connections', connectionRoutes)
-  .route('/integrations', integrationRoutes)
-  .route('/workflows', workflowRoutes)
-  .route('/workflowExecutions', workflowExecutionRoutes)
-  .route('/workflowExecutionPhases', workflowExecutionPhaseRoutes);
+  .route('/public/waitingList', waitlistRoutes)
+  .route('/protected/members', memberRoutes)
+  .route('/protected/connections', connectionRoutes)
+  .route('/protected/integrations', integrationRoutes)
+  .route('/protected/workflows', workflowRoutes)
+  .route('/protected/workflowExecutions', workflowExecutionRoutes)
+  .route('/protected/workflowExecutionPhases', workflowExecutionPhaseRoutes);
 
 export default app;
 export type AppTypes = typeof routes;

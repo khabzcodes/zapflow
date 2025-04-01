@@ -1,6 +1,6 @@
-import { baseApiRoute } from './config';
+import { baseApiRouteWithAuth } from './config';
 
-const route = baseApiRoute.integrations;
+const route = baseApiRouteWithAuth.integrations;
 
 export const getIntegrations = async () => {
   const response = await route.$get();
