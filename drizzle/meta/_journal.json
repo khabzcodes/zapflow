@@ -57,6 +57,20 @@
       "when": 1743462254645,
       "tag": "0007_modify_waiting_list_table",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1743527074289,
+      "tag": "0008_modify_waiting_list_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1743527750338,
+      "tag": "0009_revert_changes",
+      "breakpoints": true
     }
   ]
 }

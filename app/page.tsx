@@ -24,7 +24,7 @@ export default function Home() {
               className={cn(
                 buttonVariants({ variant: 'default', size: 'sm' }),
               )}>
-              Join waiting list
+              Join waitlist
             </Link>
           </div>
         </div>

@@ -25,7 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Button } from '../ui/button';
 
 type WaitingListFormProps = ComponentPropsWithRef<'div'>;
 
@@ -80,7 +79,7 @@ export const WaitingListForm = ({ className }: WaitingListFormProps) => {
               <FormItem>
                 <FormLabel className="flex items-center gap-2">
                   Organization/Business name
-                  <span className="text-xs">(optional)</span>
+                  <span>(optional)</span>
                 </FormLabel>
                 <FormControl>
                   <Input {...field} />
@@ -143,11 +142,6 @@ export const WaitingListForm = ({ className }: WaitingListFormProps) => {
               </FormItem>
             )}
           />
-          <Button
-            type="submit"
-            size="sm">
-            Submit
-          </Button>
         </form>
       </Form>
     </div>
