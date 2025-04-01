@@ -1,7 +1,9 @@
 import { GridPattern } from '@/components/shared/grid-pattern';
 import { MarketingPageFooter } from '@/components/shared/marketing-page-footer';
 import { MarketingPageHeader } from '@/components/shared/marketing-page-header';
+import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -17,6 +19,13 @@ export default function Home() {
                 intelligent automation handles the rest.
               </h1>
             </div>
+            <Link
+              href="/waiting-list"
+              className={cn(
+                buttonVariants({ variant: 'default', size: 'sm' }),
+              )}>
+              Join waiting list
+            </Link>
           </div>
         </div>
         <GridPattern

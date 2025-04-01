@@ -43,6 +43,20 @@
       "when": 1743105784805,
       "tag": "0005_add_connections_table",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1743458532067,
+      "tag": "0006_add_waiting_list_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1743462254645,
+      "tag": "0007_modify_waiting_list_table",
+      "breakpoints": true
     }
   ]
 }

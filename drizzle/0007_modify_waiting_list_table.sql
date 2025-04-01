@@ -1,0 +1,1 @@
+ALTER TABLE "wait_list" DROP COLUMN "is_organization";
