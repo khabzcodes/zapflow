@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="relative flex min-h-svh flex-col bg-background">
+    <div className="relative flex min-h-svh flex-col bg-background overflow-hidden">
       <div className="border-grid flex flex-1 flex-col">
         <MarketingPageHeader />
         <div className="relative grid h-full flex-1 place-items-center overflow-hidden">
