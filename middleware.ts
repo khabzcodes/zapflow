@@ -4,12 +4,12 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const isDevMode = process.env.NODE_ENV === 'development';
 
-  const isApiRoute = request.nextUrl.pathname.startsWith('/api');
-  const isAuthRoute = request.nextUrl.pathname.startsWith('/auth');
-  const isAppRoute = request.nextUrl.pathname.startsWith('/app');
+  // Have a list of accessible routes/ Only want to access home page and waitlist
+  const isHomeRoute = request.nextUrl.pathname === '/';
+  const isWaitingListRoute = request.nextUrl.pathname === '/waiting-list';
 
   if (!isDevMode) {
-    if (isApiRoute || isAuthRoute || isAppRoute) {
+    if (!isHomeRoute && !isWaitingListRoute) {
       return NextResponse.redirect(new URL('/', request.url));
     }
 
