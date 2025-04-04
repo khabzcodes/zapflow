@@ -5,6 +5,9 @@ import { createOrganizationConnection } from '../services/connections';
 import { ConnectionInput } from '@/types/connection';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
+import { createLogger } from '@/lib/loggers/console-logger';
+
+const logger = createLogger('WaitingListRoutes');
 
 export const connectionRoutes = new Hono<{
   Variables: {
@@ -65,7 +68,7 @@ export const connectionRoutes = new Hono<{
         200,
       );
     } catch (error) {
-      console.log(error);
+      logger.error('Error creating connection:', error);
       return new Response('Internal Server Error', { status: 500 });
     }
   },
