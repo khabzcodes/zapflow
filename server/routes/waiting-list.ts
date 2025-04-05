@@ -5,6 +5,9 @@ import {
   createWaitlistRecord,
   getWaitlistRecordByEmail,
 } from '../services/waiting-list';
+import { createLogger } from '@/lib/loggers/console-logger';
+
+const logger = createLogger('WaitingListRoutes');
 
 export const waitlistRoutes = new Hono().post(
   '/',
@@ -12,7 +15,6 @@ export const waitlistRoutes = new Hono().post(
   async (c) => {
     try {
       const body = c.req.valid('json');
-      console.log('Received waitlist request:', body);
       const exists = await getWaitlistRecordByEmail(body.email.toLowerCase());
       if (exists) {
         return c.json({ error: 'You are already in the waiting list.' }, 409);
@@ -25,7 +27,7 @@ export const waitlistRoutes = new Hono().post(
 
       return c.json({ waitlistRecord }, 201);
     } catch (error) {
-      console.error('Error creating waitlist record:', error);
+      logger.error('Error creating waitlist record:', error);
       return c.json({ error: 'Internal server error' }, 500);
     }
   },

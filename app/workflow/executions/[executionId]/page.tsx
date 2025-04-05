@@ -40,17 +40,14 @@ const ExecutionPage = ({
     return <div>Error: {error.message}</div>;
   }
 
-  // if (data.status === 'pending') {
-  //   console.log('Execute');
-  // }
   return (
     <FlowValidationContextProvider>
       <ReactFlowProvider>
         <div className="flex flex-col h-full w-full overflow-hidden">
           <TopNav
             workflowId={data.workflowId}
-            title={data.id}
-            description={data.status}
+            title="Execution"
+            description={`Execution ID: ${data.id}`}
             hideButtons={true}
           />
           <section className="flex h-full overflow-auto">

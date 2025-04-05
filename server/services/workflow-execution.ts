@@ -10,6 +10,7 @@ import { IWorkflowExecutionWithPhase } from '@/types/workflow-execution';
 import { IWorkflowExecutionPhase } from '@/types/workflow-execution-phase';
 import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
+import { type PhaseConfiguration } from '@/types/executor';
 
 export const createExecution = async (
   workflowId: string,
@@ -63,12 +64,22 @@ export const executeWorkflow = async (executionId: string) => {
     throw new Error('Execution not found');
   }
 
+  const phaseConfiguration: PhaseConfiguration = { phases: {} };
+
   await initializeWorkflowExecution(executionId, execution.workflowId);
   await initializeExecutionPhases(execution as IWorkflowExecutionWithPhase);
 
-  const executionFailed = false;
+  let executionFailed = false;
   for (const phase of execution.phases) {
-    await executeWorkflowPhase(phase as IWorkflowExecutionPhase);
+    const phaseExecution = await executeWorkflowPhase(
+      phase as IWorkflowExecutionPhase,
+      phaseConfiguration,
+    );
+    if (!phaseExecution.success) {
+      executionFailed = true;
+
+      break;
+    }
   }
 
   await finalizeWorkflowExecution(
@@ -130,8 +141,14 @@ export const finalizeWorkflowExecution = async (
     .where(eq(workflow.id, workflowId) && eq(workflow.lastRunId, executionId));
 };
 
-export const executeWorkflowPhase = async (phase: IWorkflowExecutionPhase) => {
+export const executeWorkflowPhase = async (
+  phase: IWorkflowExecutionPhase,
+  configuration: PhaseConfiguration,
+) => {
   const startedAt = new Date();
+  const node = phase.node;
+
+  setupConfigurationForPhase(node, configuration);
 
   await db
     .update(workflowExecutionPhase)
@@ -141,10 +158,9 @@ export const executeWorkflowPhase = async (phase: IWorkflowExecutionPhase) => {
     })
     .where(eq(workflowExecutionPhase.id, phase.id));
 
-  const success = executePhase(phase, phase.node);
+  const success = await executePhase(phase, node, configuration);
 
   await finalizeWorkflowPhase(phase.id, false);
-
   return { success };
 };
 
@@ -164,11 +180,41 @@ export const finalizeWorkflowPhase = async (
 export const executePhase = async (
   phase: IWorkflowExecutionPhase,
   node: AppNode,
+  configuration: PhaseConfiguration,
 ) => {
   const runFn = ExecutorRegistry[node.data.type];
   if (!runFn) {
     return false;
   }
 
-  return await runFn();
+  const executionEnvironment = createExecutionConfiguration(
+    node,
+    configuration,
+  );
+
+  return await runFn(executionEnvironment);
+};
+
+const setupConfigurationForPhase = (
+  node: AppNode,
+  configuration: PhaseConfiguration,
+) => {
+  configuration.phases[node.id] = { inputs: {}, outputs: {} };
+  const inputs = TaskRegistry[node.data.type].inputs;
+
+  for (const input of inputs) {
+    const inputValue = node.data.inputs[input.name];
+    if (inputValue) {
+      configuration.phases[node.id].inputs[input.name] = inputValue;
+    }
+  }
+};
+
+const createExecutionConfiguration = (
+  node: AppNode,
+  configuration: PhaseConfiguration,
+) => {
+  return {
+    getInput: (name: string) => configuration.phases[node.id]?.inputs[name],
+  };
 };

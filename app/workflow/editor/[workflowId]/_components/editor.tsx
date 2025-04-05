@@ -17,7 +17,7 @@ export const Editor = ({ workflow }: EditorProps) => {
           <TopNav
             workflowId={workflow.id}
             title={workflow.name}
-            description={workflow.description || ''}
+            description={`Workflow ID: ${workflow.id}`}
           />
           <section className="flex h-full overflow-auto">
             <TaskMenu />

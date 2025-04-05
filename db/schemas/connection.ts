@@ -15,7 +15,7 @@ export const connection = pgTable('connections', {
   name: text('name').notNull(),
   provider: text('provider').notNull(),
   settings: jsonb('settings').default({}),
-  status: statusEnum('status').notNull().default('disconnected'),
+  status: statusEnum('status').notNull().default('connected'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at'),
   createdById: text('created_by_id')
