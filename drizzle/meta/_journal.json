@@ -71,6 +71,13 @@
       "when": 1743527750338,
       "tag": "0009_revert_changes",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1743857556055,
+      "tag": "0010_change_default_connection_status",
+      "breakpoints": true
     }
   ]
 }

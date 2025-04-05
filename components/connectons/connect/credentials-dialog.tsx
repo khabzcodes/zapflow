@@ -14,6 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Icons } from '@/components/ui/icons';
 import { Input } from '@/components/ui/input';
 import { createOrganizationConnection } from '@/rpc/connections';
 import { Connection, ConnectionInput } from '@/types/connection';
@@ -148,8 +149,11 @@ export const CredentialsDialog = ({
             ))}
             <Button
               type="submit"
-              disabled={!form.formState.isValid}>
+              disabled={mutation.isPending}>
               Connect
+              {mutation.isPending && (
+                <Icons.spinner className="animate-spin ml-2" />
+              )}
             </Button>
           </form>
         </Form>
