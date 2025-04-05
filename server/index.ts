@@ -16,15 +16,11 @@ const app = new Hono<{
   };
 }>().basePath('/api/server');
 
-app.on(
-  ['POST', 'GET', 'PUT', 'DELETE', 'PATCH'],
-  '/api/server/protected/*',
-  (c) => {
-    return auth.handler(c.req.raw);
-  },
-);
+app.on(['POST', 'GET', 'PUT', 'DELETE', 'PATCH'], '/api/server/*', (c) => {
+  return auth.handler(c.req.raw);
+});
 
-app.use('/api/server/protected/*', async (c, next) => {
+app.use('*', async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
   const member = await auth.api.getActiveMember({ headers: c.req.raw.headers });
 
