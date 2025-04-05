@@ -16,12 +16,14 @@ export const TopNav = ({
   hideButtons,
 }: TopNavProps) => {
   const router = useRouter();
+  const backRoute =
+    title === 'Execution' ? `/workflow/editor/${workflowId}` : '/app/workflows';
   return (
     <div className="flex p-2 border-b border-separate justify-between items-center w-full h-[60px] sticky top-0 bg-background z-10">
       <div className="flex gap-1">
         <Icons.arrowLeft
           className="cursor-pointer"
-          onClick={() => router.push('/app/workflows')}
+          onClick={() => router.push(backRoute)}
         />
         <div className="flex flex-col">
           <p className="font-bold">{title}</p>
